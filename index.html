@@ -9,104 +9,37 @@
   <meta property="og:description" content="A firm in formation.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://lawsonpoint.com/poster.jpg">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%231a1713'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Georgia, serif' font-size='26' letter-spacing='1' fill='%23f7f4ee'%3ELP%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23182A3E'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Georgia, serif' font-size='26' letter-spacing='1' fill='%23F7F2E8'%3ELP%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --type: #f3ede3;
-      --muted: rgba(243, 237, 227, 0.78);
-      --rule: rgba(243, 237, 227, 0.4);
-      --scrim: 16, 20, 19;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; }
+    /* Colour graded to the Copper / Navy / Beige palette (navy shadows, copper
+       highlights) in the video; the card wears the palette — Linen text, Sand
+       muted, a Copper hairline, over a Deep Navy scrim. */
+    :root { --linen:#F7F2E8; --sand:#E9DFC9; --copper:#B0693C; --navy:24,42,62; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; }
     body {
-      background: #101413 url('poster.jpg') center / cover no-repeat;
-      color: var(--type);
-      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 2rem 1.5rem;
-      text-align: center;
+      background:#0f1826;
+      color:var(--linen);
+      font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      min-height:100vh; padding:2rem 1.5rem; text-align:center;
     }
-    .ground {
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(0.8) saturate(0.85);
-    }
-    .scrim {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background:
-        radial-gradient(ellipse 60rem 30rem at 50% 47%, rgba(var(--scrim), 0.6), rgba(var(--scrim), 0.32) 62%, rgba(var(--scrim), 0.2)),
-        linear-gradient(to top, rgba(var(--scrim), 0.6), rgba(var(--scrim), 0.12) 32%, rgba(var(--scrim), 0.12) 75%, rgba(var(--scrim), 0.35));
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .ground { display: none; }
-    }
-    main {
-      animation: settle 1.4s ease-out both;
-    }
-    @keyframes settle {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: none; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      main { animation: none; }
-    }
-    .name {
-      font-family: 'Spectral', Georgia, serif;
-      font-weight: 500;
-      font-size: clamp(1.6rem, 5.2vw, 3rem);
-      letter-spacing: 0.18em;
-      text-indent: 0.18em;
-      text-transform: uppercase;
-      line-height: 1.2;
-      text-shadow: 0 1px 24px rgba(0, 0, 0, 0.45);
-    }
-    .sub {
-      margin-top: 0.9rem;
-      font-size: clamp(0.62rem, 1.6vw, 0.82rem);
-      font-weight: 500;
-      letter-spacing: 0.52em;
-      text-indent: 0.52em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-shadow: 0 1px 16px rgba(0, 0, 0, 0.5);
-    }
-    .rule {
-      width: 3.5rem;
-      height: 1px;
-      background: var(--rule);
-      margin: 2.75rem auto;
-    }
-    .status {
-      font-family: 'Spectral', Georgia, serif;
-      font-style: italic;
-      font-size: clamp(1rem, 2.4vw, 1.2rem);
-      color: var(--muted);
-      text-shadow: 0 1px 16px rgba(0, 0, 0, 0.5);
-    }
-    footer {
-      position: fixed;
-      bottom: 1.75rem;
-      left: 0;
-      right: 0;
-      font-size: 0.7rem;
-      letter-spacing: 0.08em;
-      color: rgba(243, 237, 227, 0.6);
-      text-align: center;
-    }
+    .ground { position:fixed; inset:0; z-index:-2; width:100%; height:100%; object-fit:cover; filter:brightness(0.9); }
+    .scrim { position:fixed; inset:0; z-index:-1; background:
+      radial-gradient(ellipse 60rem 30rem at 50% 47%, rgba(var(--navy),0.5), rgba(var(--navy),0.28) 62%, rgba(var(--navy),0.16)),
+      linear-gradient(to top, rgba(var(--navy),0.55), rgba(var(--navy),0.1) 32%, rgba(var(--navy),0.1) 74%, rgba(var(--navy),0.42)); }
+    @media (prefers-reduced-motion: reduce) { .ground { display:none; } }
+    main { animation:settle 1.4s ease-out both; }
+    @keyframes settle { from { opacity:0; transform:translateY(6px);} to { opacity:1; transform:none;} }
+    @media (prefers-reduced-motion: reduce) { main { animation:none; } }
+    .name { font-family:'Spectral',Georgia,serif; font-weight:500; font-size:clamp(1.6rem,5.2vw,3rem); letter-spacing:0.18em; text-indent:0.18em; text-transform:uppercase; line-height:1.2; text-shadow:0 1px 26px rgba(0,0,0,0.55); }
+    .sub { margin-top:0.9rem; font-size:clamp(0.62rem,1.6vw,0.82rem); font-weight:500; letter-spacing:0.52em; text-indent:0.52em; text-transform:uppercase; color:var(--sand); text-shadow:0 1px 16px rgba(0,0,0,0.6); }
+    .rule { width:3.5rem; height:2px; background:var(--copper); margin:2.75rem auto; box-shadow:0 0 14px rgba(176,105,60,0.5); }
+    .status { font-family:'Spectral',Georgia,serif; font-style:italic; font-size:clamp(1rem,2.4vw,1.2rem); color:var(--sand); text-shadow:0 1px 16px rgba(0,0,0,0.6); }
+    footer { position:fixed; bottom:1.75rem; left:0; right:0; font-size:0.7rem; letter-spacing:0.08em; color:rgba(247,242,232,0.6); text-align:center; }
   </style>
 </head>
 <body>
