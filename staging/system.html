@@ -21,6 +21,13 @@
   .switch .lbl{font-size:13px;font-weight:600;color:var(--navy)}
   .switch .fixed{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
   .switch .fixed .d{width:16px;height:16px;border-radius:50%;border:1px solid rgba(0,0,0,.14);background:var(--accent)}
+  .sysbtns{display:flex;gap:8px}
+  .sysbtn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;cursor:pointer;padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:#fff}
+  .sysbtn.on{border-color:var(--navy);background:#f5f7f9}
+  .sysbtn .sw2{display:flex;gap:3px;margin-bottom:3px}
+  .sysbtn .sw2 i{width:16px;height:16px;border-radius:4px;border:1px solid rgba(0,0,0,.14);display:block}
+  .sysbtn .sn{font-size:13px;font-weight:700;color:var(--navy)}
+  .sysbtn .sd{font-size:10.5px;color:var(--muted)}
   .chip{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;padding:5px 8px;border-radius:10px;border:2px solid transparent}
   .chip.on{border-color:var(--navy);background:#f5f7f9}
   .chip .d{width:26px;height:26px;border-radius:50%;border:1px solid rgba(0,0,0,.14)}
@@ -84,7 +91,8 @@
 <body>
 <div class="wrap">
   <div class="switch" id="switch">
-    <span class="lbl">Gray</span>
+    <span class="lbl">Neutral system</span>
+    <div class="sysbtns" id="sysbtns"></div>
     <span class="fixed"><span class="d"></span>Accent locked · Clay Rose #C4796B</span>
     <span class="curhex" id="curhex"></span>
   </div>
@@ -158,20 +166,16 @@ function lockup(letters,point){const i=++uid;
       <mask id="pt${i}"><circle cx="100" cy="100" r="90" fill="#fff"/><g fill="none" stroke="#000" stroke-linecap="round">${BANDS}</g></mask>
       <rect width="200" height="200" fill="${point}" mask="url(#pt${i})"/></svg></svg>`;}
 
-/* ACCENT is locked to Clay Rose. The switcher changes the GRAY. */
-const GRAYS=[
-  {n:'Mist',h:'#B9C2C1'},        /* cool, faint green */
-  {n:'Fog',h:'#C6CCCB'},         /* lighter, neutral cool */
-  {n:'Harbor gray',h:'#AEB9BF'}, /* cooler, bluer — toward navy */
-  {n:'Sage gray',h:'#BFC7BF'},   /* greener — echoes sage */
-  {n:'Dove',h:'#C6C1B7'},        /* warm greige — toward linen/clay */
-  {n:'Cloud',h:'#DEE3E2'},       /* pale cool gray */
-  {n:'Pearl',h:'#E4E0D7'},       /* pale warm greige */
+/* ACCENT locked to Clay Rose. Toggle the whole NEUTRAL SYSTEM (paper + gray). */
+const SYSTEMS=[
+  {key:'warm', name:'Warm', paper:'#F7F2E8', pN:'Linen',      gray:'#C6C1B7', gN:'Dove'},
+  {key:'cool', name:'Cool', paper:'#F2F3F3', pN:'Soft white', gray:'#DEE3E2', gN:'Cloud'},
 ];
-const NAVY='#2E3C4D',SAGE='#96B09D',LINEN='#F7F2E8';
+const NAVY='#2E3C4D',SAGE='#96B09D';
 const R=document.documentElement;
 const getA=()=>getComputedStyle(R).getPropertyValue('--accent').trim();
 const getM=()=>getComputedStyle(R).getPropertyValue('--mist').trim();
+const getL=()=>getComputedStyle(R).getPropertyValue('--linen').trim();
 
 function chart(){
   const A=getA(),M=getM();
@@ -182,49 +186,51 @@ function chart(){
   document.getElementById('chart').innerHTML=s;
 }
 function logos(){
-  const A=getA(),M=getM();
-  document.getElementById('hero-logo').innerHTML=lockup(LINEN,A);
+  const A=getA(),M=getM(),L=getL();
+  document.getElementById('hero-logo').innerHTML=lockup(L,A);
   const combos=[
-    [LINEN,NAVY,A,'Point · accent'],
-    [LINEN,NAVY,SAGE,'Point · sage'],
-    [LINEN,NAVY,NAVY,'Point · navy (mono)'],
-    [LINEN,NAVY,M,'Point · gray'],
-    [NAVY,LINEN,A,'Reversed · accent point'],
-    [NAVY,LINEN,SAGE,'Reversed · sage point'],
+    [L,NAVY,A,'Point · accent'],
+    [L,NAVY,SAGE,'Point · sage'],
+    [L,NAVY,NAVY,'Point · navy (mono)'],
+    [L,NAVY,M,'Point · gray'],
+    [NAVY,L,A,'Reversed · accent point'],
+    [NAVY,L,SAGE,'Reversed · sage point'],
     [NAVY,SAGE,A,'Sage LP · accent point'],
     [M,NAVY,A,'On gray · accent point'],
   ];
   document.getElementById('logogrid').innerHTML=combos.map(([bg,lp,pt,cap])=>
     `<div class="lt"><div class="st" style="background:${bg}">${lockup(lp,pt)}</div><div class="c">${cap}</div></div>`).join('');
 }
-function setGray(g){
-  R.style.setProperty('--mist',g.h);
-  document.getElementById('curhex').textContent=g.n+' · '+g.h.toUpperCase();
-  [...document.getElementById('switch').querySelectorAll('.chip')].forEach(c=>c.classList.toggle('on',c.dataset.h.toLowerCase()===g.h.toLowerCase()));
+function setSystem(s){
+  R.style.setProperty('--linen',s.paper);
+  R.style.setProperty('--mist',s.gray);
+  document.getElementById('curhex').textContent=`${s.name} · ${s.pN} ${s.paper} + ${s.gN} ${s.gray}`;
+  [...document.getElementById('sysbtns').children].forEach(b=>b.classList.toggle('on',b.dataset.k===s.key));
   chart(); logos(); syncPal(); postH();
 }
-const sw=document.getElementById('switch');
-GRAYS.forEach(g=>{const chip=document.createElement('span');chip.className='chip';chip.dataset.h=g.h;chip.title=g.n;
-  chip.innerHTML=`<span class="d" style="background:${g.h}"></span><span class="n">${g.n}</span>`;chip.onclick=()=>setGray(g);
-  sw.insertBefore(chip, document.getElementById('curhex'));});
-const cust=document.createElement('input');cust.type='color';cust.title='Custom gray';cust.oninput=e=>setGray({n:'Custom',h:e.target.value});
-sw.insertBefore(cust,document.getElementById('curhex'));
+const sysbtns=document.getElementById('sysbtns');
+SYSTEMS.forEach(s=>{const b=document.createElement('button');b.className='sysbtn';b.dataset.k=s.key;
+  b.innerHTML=`<span class="sw2"><i style="background:${s.paper}"></i><i style="background:${s.gray}"></i></span><span class="sn">${s.name}</span><span class="sd">${s.pN} + ${s.gN}</span>`;
+  b.onclick=()=>setSystem(s); sysbtns.appendChild(b);});
 
 document.getElementById('pal').innerHTML=
-  `<div class="s" style="background:#2E3C4D;color:#F7F2E8">#2E3C4D</div>`+
-  `<div class="s" style="background:#96B09D;color:#23262A">#96B09D</div>`+
-  `<div class="s" id="pal-mist" style="color:#23262A"></div>`+
-  `<div class="s" style="background:#F7F2E8;color:#8a8377">#F7F2E8</div>`+
-  `<div class="s" style="background:#FFFFFF;color:#8a8377">#FFFFFF</div>`+
+  `<div class="s" style="background:#2E3C4D;color:#F7F2E8">#2E3C4D · navy</div>`+
+  `<div class="s" style="background:#96B09D;color:#23262A">#96B09D · sage</div>`+
+  `<div class="s" id="pal-gray" style="color:#23262A"></div>`+
+  `<div class="s" id="pal-paper" style="color:#8a8377"></div>`+
+  `<div class="s" style="background:#FFFFFF;color:#8a8377">#FFFFFF · white</div>`+
   `<div class="s" style="background:#C4796B;color:#fff">#C4796B · accent</div>`;
-function syncPal(){const el=document.getElementById('pal-mist');const m=getM();el.style.background=m;el.textContent=m.toUpperCase()+' · gray';}
-
+function syncPal(){
+  const g=getM(),p=getL();
+  const gel=document.getElementById('pal-gray'); gel.style.background=g; gel.textContent=g.toUpperCase()+' · gray';
+  const pel=document.getElementById('pal-paper'); pel.style.background=p; pel.textContent=p.toUpperCase()+' · paper';
+}
 function postH(){try{parent.postMessage({lpHeight:document.body.scrollHeight},'*');}catch(e){}}
 window.addEventListener('load',postH);
 if(window.ResizeObserver) new ResizeObserver(postH).observe(document.body);
 window.addEventListener('load',()=>document.fonts&&document.fonts.ready.then(postH));
 
-setGray(GRAYS[0]);
+setSystem(SYSTEMS[0]);
 </script>
 </body>
 </html>
