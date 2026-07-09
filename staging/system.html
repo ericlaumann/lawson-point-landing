@@ -11,7 +11,7 @@
   :root{
     --navy:#2E3C4D; --sage:#96B09D; --mist:#B9C2C1; --linen:#F7F2E8; --white:#ffffff;
     --ink:#23262A; --muted:#6b7280; --line:#e6ddcd;
-    --accent:#E5633A; --on-accent:#ffffff;
+    --accent:#C4796B; --on-accent:#ffffff;   /* LOCKED — Clay Rose */
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--linen);color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
@@ -19,6 +19,8 @@
   .wrap{max-width:1180px;margin:0 auto;padding:8px 34px 40px}
   .switch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 6px;padding:14px 18px;border:1px solid var(--line);border-radius:14px;background:#fff}
   .switch .lbl{font-size:13px;font-weight:600;color:var(--navy)}
+  .switch .fixed{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .switch .fixed .d{width:16px;height:16px;border-radius:50%;border:1px solid rgba(0,0,0,.14);background:var(--accent)}
   .chip{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;padding:5px 8px;border-radius:10px;border:2px solid transparent}
   .chip.on{border-color:var(--navy);background:#f5f7f9}
   .chip .d{width:26px;height:26px;border-radius:50%;border:1px solid rgba(0,0,0,.14)}
@@ -27,13 +29,12 @@
   .curhex{margin-left:auto;font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--muted)}
   .pal{display:flex;border-radius:12px;overflow:hidden;border:1px solid var(--line);margin-top:12px}
   .pal .s{flex:1;height:56px;display:flex;align-items:flex-end;padding:6px 8px;font-family:ui-monospace,Menlo,monospace;font-size:10px}
-  h2sec{}
   .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;margin-top:18px}
   .card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
   .card .pad{padding:22px 24px}
   .tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 14px}
-  .col4{grid-column:span 4}.col6{grid-column:span 6}.col12{grid-column:span 12}
-  @media(max-width:900px){.col4,.col6{grid-column:span 12}}
+  .col6{grid-column:span 6}.col12{grid-column:span 12}
+  @media(max-width:900px){.col6{grid-column:span 12}}
   .hero{background:var(--navy);color:var(--linen);grid-column:span 7;border-radius:16px;padding:34px 36px;display:flex;flex-direction:column;gap:16px;min-height:300px}
   @media(max-width:900px){.hero{grid-column:span 12}}
   .hero .logo{width:120px;height:120px}
@@ -82,7 +83,11 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="switch" id="switch"><span class="lbl">Accent</span><span class="curhex" id="curhex"></span></div>
+  <div class="switch" id="switch">
+    <span class="lbl">Gray</span>
+    <span class="fixed"><span class="d"></span>Accent locked · Clay Rose #C4796B</span>
+    <span class="curhex" id="curhex"></span>
+  </div>
   <div class="pal" id="pal"></div>
 
   <div class="grid">
@@ -153,63 +158,71 @@ function lockup(letters,point){const i=++uid;
       <mask id="pt${i}"><circle cx="100" cy="100" r="90" fill="#fff"/><g fill="none" stroke="#000" stroke-linecap="round">${BANDS}</g></mask>
       <rect width="200" height="200" fill="${point}" mask="url(#pt${i})"/></svg></svg>`;}
 
-const ACCENTS=[
-  {n:'Persimmon',h:'#E5633A'},{n:'Marigold',h:'#E9A52C'},{n:'Coral',h:'#EC6A5A'},
-  {n:'Clay rose',h:'#C4796B'},{n:'Apricot',h:'#F2A65A'},
+/* ACCENT is locked to Clay Rose. The switcher changes the GRAY. */
+const GRAYS=[
+  {n:'Mist',h:'#B9C2C1'},        /* cool, faint green */
+  {n:'Fog',h:'#C6CCCB'},         /* lighter, neutral cool */
+  {n:'Harbor gray',h:'#AEB9BF'}, /* cooler, bluer — toward navy */
+  {n:'Sage gray',h:'#BFC7BF'},   /* greener — echoes sage */
+  {n:'Dove',h:'#C6C1B7'},        /* warm greige — toward linen/clay */
 ];
-const NAVY='#2E3C4D',SAGE='#96B09D',MIST='#B9C2C1',LINEN='#F7F2E8';
-const lum=h=>{const n=parseInt(h.slice(1),16);return (0.299*(n>>16)+0.587*(n>>8&255)+0.114*(n&255));};
+const NAVY='#2E3C4D',SAGE='#96B09D',LINEN='#F7F2E8';
 const R=document.documentElement;
 const getA=()=>getComputedStyle(R).getPropertyValue('--accent').trim();
+const getM=()=>getComputedStyle(R).getPropertyValue('--mist').trim();
 
 function chart(){
-  const A=getA();
-  const bars=[[NAVY,70],[SAGE,95],[MIST,120],[NAVY,140],[SAGE,165],[A,200]];
+  const A=getA(),M=getM();
+  const bars=[[NAVY,70],[SAGE,95],[M,120],[NAVY,140],[SAGE,165],[A,200]];
   let s=`<line x1="34" y1="190" x2="450" y2="190" stroke="${NAVY}" stroke-width="1.5"/>`;
   bars.forEach((b,i)=>{const x=48+i*66,h=b[1];s+=`<rect x="${x}" y="${190-h}" width="42" height="${h}" rx="5" fill="${b[0]}"/>`;});
   s+=`<text x="34" y="210" font-size="11" fill="#6b7280" font-family="Inter">'21</text><text x="430" y="210" font-size="11" fill="#6b7280" font-family="Inter">'26</text>`;
   document.getElementById('chart').innerHTML=s;
 }
 function logos(){
-  const A=getA();
+  const A=getA(),M=getM();
   document.getElementById('hero-logo').innerHTML=lockup(LINEN,A);
   const combos=[
     [LINEN,NAVY,A,'Point · accent'],
     [LINEN,NAVY,SAGE,'Point · sage'],
     [LINEN,NAVY,NAVY,'Point · navy (mono)'],
-    [LINEN,NAVY,MIST,'Point · mist'],
+    [LINEN,NAVY,M,'Point · gray'],
     [NAVY,LINEN,A,'Reversed · accent point'],
     [NAVY,LINEN,SAGE,'Reversed · sage point'],
     [NAVY,SAGE,A,'Sage LP · accent point'],
-    [MIST,NAVY,A,'On mist · accent point'],
+    [M,NAVY,A,'On gray · accent point'],
   ];
   document.getElementById('logogrid').innerHTML=combos.map(([bg,lp,pt,cap])=>
     `<div class="lt"><div class="st" style="background:${bg}">${lockup(lp,pt)}</div><div class="c">${cap}</div></div>`).join('');
 }
-function setAccent(a){
-  R.style.setProperty('--accent',a.h);
-  R.style.setProperty('--on-accent', lum(a.h)>150 ? '#23262A' : '#ffffff');
-  document.getElementById('curhex').textContent=a.n+' · '+a.h.toUpperCase();
-  [...document.getElementById('switch').querySelectorAll('.chip')].forEach(c=>c.classList.toggle('on',c.dataset.h.toLowerCase()===a.h.toLowerCase()));
+function setGray(g){
+  R.style.setProperty('--mist',g.h);
+  document.getElementById('curhex').textContent=g.n+' · '+g.h.toUpperCase();
+  [...document.getElementById('switch').querySelectorAll('.chip')].forEach(c=>c.classList.toggle('on',c.dataset.h.toLowerCase()===g.h.toLowerCase()));
   chart(); logos(); syncPal(); postH();
 }
 const sw=document.getElementById('switch');
-ACCENTS.forEach(a=>{const chip=document.createElement('span');chip.className='chip';chip.dataset.h=a.h;chip.title=a.n;
-  chip.innerHTML=`<span class="d" style="background:${a.h}"></span><span class="n">${a.n}</span>`;chip.onclick=()=>setAccent(a);sw.appendChild(chip);});
-const cust=document.createElement('input');cust.type='color';cust.title='Custom';cust.oninput=e=>setAccent({n:'Custom',h:e.target.value});
+GRAYS.forEach(g=>{const chip=document.createElement('span');chip.className='chip';chip.dataset.h=g.h;chip.title=g.n;
+  chip.innerHTML=`<span class="d" style="background:${g.h}"></span><span class="n">${g.n}</span>`;chip.onclick=()=>setGray(g);
+  sw.insertBefore(chip, document.getElementById('curhex'));});
+const cust=document.createElement('input');cust.type='color';cust.title='Custom gray';cust.oninput=e=>setGray({n:'Custom',h:e.target.value});
 sw.insertBefore(cust,document.getElementById('curhex'));
-document.getElementById('pal').innerHTML=[
-  ['#2E3C4D','#F7F2E8'],['#96B09D','#23262A'],['#B9C2C1','#23262A'],['#F7F2E8','#8a8377'],['#FFFFFF','#8a8377']
-].map(([h,t])=>`<div class="s" style="background:${h};color:${t}">${h}</div>`).join('')+`<div class="s" id="pal-accent" style="color:#fff"></div>`;
-function syncPal(){const a=getA();const el=document.getElementById('pal-accent');el.style.background=a;el.style.color=lum(a)>150?'#23262A':'#fff';el.textContent=a.toUpperCase();}
 
-/* report height to parent (for the iframe on the landing page) */
+document.getElementById('pal').innerHTML=
+  `<div class="s" style="background:#2E3C4D;color:#F7F2E8">#2E3C4D</div>`+
+  `<div class="s" style="background:#96B09D;color:#23262A">#96B09D</div>`+
+  `<div class="s" id="pal-mist" style="color:#23262A"></div>`+
+  `<div class="s" style="background:#F7F2E8;color:#8a8377">#F7F2E8</div>`+
+  `<div class="s" style="background:#FFFFFF;color:#8a8377">#FFFFFF</div>`+
+  `<div class="s" style="background:#C4796B;color:#fff">#C4796B · accent</div>`;
+function syncPal(){const el=document.getElementById('pal-mist');const m=getM();el.style.background=m;el.textContent=m.toUpperCase()+' · gray';}
+
 function postH(){try{parent.postMessage({lpHeight:document.body.scrollHeight},'*');}catch(e){}}
 window.addEventListener('load',postH);
 if(window.ResizeObserver) new ResizeObserver(postH).observe(document.body);
 window.addEventListener('load',()=>document.fonts&&document.fonts.ready.then(postH));
 
-setAccent(ACCENTS[0]);
+setGray(GRAYS[0]);
 </script>
 </body>
 </html>
