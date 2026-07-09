@@ -9,8 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#2E3C4D; --sage:#96B09D; --mist:#B9C2C1; --linen:#F7F2E8; --white:#ffffff;
-    --ink:#23262A; --muted:#6b7280; --line:#e6ddcd;
+    --navy:#2E3C4D; --sage:#96B09D; --mist:#DEE3E2; --linen:#F2F3F3; --white:#ffffff;
+    --ink:#23262A; --muted:#6b7280; --line:#e2e6e5;
     --accent:#C4796B; --on-accent:#ffffff;   /* LOCKED — Clay Rose */
   }
   *{box-sizing:border-box}
@@ -86,15 +86,22 @@
   .lt .st{aspect-ratio:1.3/1;display:flex;align-items:center;justify-content:center;padding:12% 15%}
   .lt .st svg{width:100%;height:100%}
   .lt .c{font-size:11px;color:var(--muted);text-align:center;padding:8px 6px;background:#fff;border-top:1px solid var(--line)}
+  .subtag{font-family:'Spectral',serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);font-weight:600;margin:26px 0 12px}
+  .subtag.first{margin-top:4px}
+  .st.checker{background:conic-gradient(#e6eae9 90deg,#f4f6f5 0 180deg,#e6eae9 0 270deg,#f4f6f5 0) 0 0/20px 20px}
+  .favrow{display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap;padding:8px 2px 2px}
+  .favu{display:flex;flex-direction:column;align-items:center;gap:7px}
+  .favbox{border:1px solid var(--line);border-radius:22%;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--navy)}
+  .favn{font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="switch" id="switch">
-    <span class="lbl">Neutral system</span>
-    <div class="sysbtns" id="sysbtns"></div>
-    <span class="fixed"><span class="d"></span>Accent locked · Clay Rose #C4796B</span>
-    <span class="curhex" id="curhex"></span>
+    <span class="lbl">Final system</span>
+    <span class="fixed">Navy · Sage neutrals · Soft-white paper + Cloud gray</span>
+    <span class="fixed"><span class="d"></span>Clay Rose accent · #C4796B</span>
+    <span class="curhex" id="curhex">Locked · 2026-07-09</span>
   </div>
   <div class="pal" id="pal"></div>
 
@@ -145,8 +152,15 @@
     </div>
 
     <div class="card col12"><div class="pad">
-      <p class="tag">Logo — the point needn't be the accent</p>
-      <div class="logogrid" id="logogrid"></div>
+      <p class="tag">Brand assets — lockups, the point &amp; favicons</p>
+      <p class="subtag first">Full lockup · two-colour — the point needn't be the accent</p>
+      <div class="logogrid" id="lg-two"></div>
+      <p class="subtag">Full lockup · single-colour (mono)</p>
+      <div class="logogrid" id="lg-mono"></div>
+      <p class="subtag">The point · symbol — bands stay transparent</p>
+      <div class="logogrid" id="lg-points"></div>
+      <p class="subtag">Icon / favicon · clay point on navy</p>
+      <div class="favrow" id="lg-favs"></div>
     </div></div>
   </div>
 </div>
@@ -166,12 +180,8 @@ function lockup(letters,point){const i=++uid;
       <mask id="pt${i}"><circle cx="100" cy="100" r="90" fill="#fff"/><g fill="none" stroke="#000" stroke-linecap="round">${BANDS}</g></mask>
       <rect width="200" height="200" fill="${point}" mask="url(#pt${i})"/></svg></svg>`;}
 
-/* ACCENT locked to Clay Rose. Toggle the whole NEUTRAL SYSTEM (paper + gray). */
-const SYSTEMS=[
-  {key:'warm', name:'Warm', paper:'#F7F2E8', pN:'Linen',      gray:'#C6C1B7', gN:'Dove'},
-  {key:'cool', name:'Cool', paper:'#F2F3F3', pN:'Soft white', gray:'#DEE3E2', gN:'Cloud'},
-];
-const NAVY='#2E3C4D',SAGE='#96B09D';
+/* LOCKED system (2026-07-09): Clay Rose accent · Soft-white paper + Cloud gray. */
+const NAVY='#2E3C4D',SAGE='#96B09D',WHITE='#FFFFFF';
 const R=document.documentElement;
 const getA=()=>getComputedStyle(R).getPropertyValue('--accent').trim();
 const getM=()=>getComputedStyle(R).getPropertyValue('--mist').trim();
@@ -185,34 +195,39 @@ function chart(){
   s+=`<text x="34" y="210" font-size="11" fill="#6b7280" font-family="Inter">'21</text><text x="430" y="210" font-size="11" fill="#6b7280" font-family="Inter">'26</text>`;
   document.getElementById('chart').innerHTML=s;
 }
+function disc(color,size){const i=++uid;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <mask id="d${i}"><circle cx="100" cy="100" r="90" fill="#fff"/><g fill="none" stroke="#000" stroke-linecap="round">${BANDS}</g></mask>
+    <rect width="200" height="200" fill="${color}" mask="url(#d${i})"/></svg>`;}
+function lt(bg,svg,cap,checker){
+  return `<div class="lt"><div class="st${checker?' checker':''}" style="background:${bg}">${svg}</div><div class="c">${cap}</div></div>`;}
+function favUnit(size){const disp=Math.min(size,120);
+  return `<div class="favu"><div class="favbox" style="width:${disp+20}px;height:${disp+20}px">${disc(getA(),disp)}</div><div class="favn">${size}px</div></div>`;}
 function logos(){
   const A=getA(),M=getM(),L=getL();
   document.getElementById('hero-logo').innerHTML=lockup(L,A);
-  const combos=[
-    [L,NAVY,A,'Point · accent'],
-    [L,NAVY,SAGE,'Point · sage'],
-    [L,NAVY,NAVY,'Point · navy (mono)'],
-    [L,NAVY,M,'Point · gray'],
-    [NAVY,L,A,'Reversed · accent point'],
+  const two=[
+    [L,NAVY,A,'Navy LP · clay point'],
+    [WHITE,NAVY,SAGE,'Navy LP · sage point'],
+    [L,NAVY,M,'Navy LP · cloud point'],
+    [NAVY,L,A,'Reversed · clay point'],
+    [NAVY,SAGE,A,'Sage LP · clay point'],
     [NAVY,L,SAGE,'Reversed · sage point'],
-    [NAVY,SAGE,A,'Sage LP · accent point'],
-    [M,NAVY,A,'On gray · accent point'],
   ];
-  document.getElementById('logogrid').innerHTML=combos.map(([bg,lp,pt,cap])=>
-    `<div class="lt"><div class="st" style="background:${bg}">${lockup(lp,pt)}</div><div class="c">${cap}</div></div>`).join('');
+  document.getElementById('lg-two').innerHTML=two.map(([bg,lp,pt,c])=>lt(bg,lockup(lp,pt),c,0)).join('');
+  const mono=[
+    [L,NAVY,NAVY,'Mono navy · paper'],
+    [L,A,A,'Mono clay · paper'],
+    [NAVY,WHITE,WHITE,'All white · on navy'],
+  ];
+  document.getElementById('lg-mono').innerHTML=mono.map(([bg,lp,pt,c])=>lt(bg,lockup(lp,pt),c,0)).join('');
+  const pts=[
+    ['',A,'Clay',1],['',NAVY,'Navy',1],['',SAGE,'Sage',1],['',M,'Cloud',1],
+    [NAVY,L,'Soft white · on navy',0],[NAVY,WHITE,'White · on navy',0],
+  ];
+  document.getElementById('lg-points').innerHTML=pts.map(([bg,c,cap,ck])=>lt(bg,disc(c,150),cap,ck)).join('');
+  document.getElementById('lg-favs').innerHTML=[512,180,64,32,16].map(favUnit).join('');
 }
-function setSystem(s){
-  R.style.setProperty('--linen',s.paper);
-  R.style.setProperty('--mist',s.gray);
-  document.getElementById('curhex').textContent=`${s.name} · ${s.pN} ${s.paper} + ${s.gN} ${s.gray}`;
-  [...document.getElementById('sysbtns').children].forEach(b=>b.classList.toggle('on',b.dataset.k===s.key));
-  chart(); logos(); syncPal(); postH();
-}
-const sysbtns=document.getElementById('sysbtns');
-SYSTEMS.forEach(s=>{const b=document.createElement('button');b.className='sysbtn';b.dataset.k=s.key;
-  b.innerHTML=`<span class="sw2"><i style="background:${s.paper}"></i><i style="background:${s.gray}"></i></span><span class="sn">${s.name}</span><span class="sd">${s.pN} + ${s.gN}</span>`;
-  b.onclick=()=>setSystem(s); sysbtns.appendChild(b);});
-
 document.getElementById('pal').innerHTML=
   `<div class="s" style="background:#2E3C4D;color:#F7F2E8">#2E3C4D · navy</div>`+
   `<div class="s" style="background:#96B09D;color:#23262A">#96B09D · sage</div>`+
@@ -230,7 +245,7 @@ window.addEventListener('load',postH);
 if(window.ResizeObserver) new ResizeObserver(postH).observe(document.body);
 window.addEventListener('load',()=>document.fonts&&document.fonts.ready.then(postH));
 
-setSystem(SYSTEMS[0]);
+chart(); logos(); syncPal(); postH();
 </script>
 </body>
 </html>

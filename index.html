@@ -49,32 +49,33 @@
     @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(4px)} }
 
     /* ============ BEGIN TEMP STAGING (remove this block + <section class="tf"> + /staging to revert) ============ */
-    .tf { position:relative; background:#faf6ee; color:#2a2621; border-top:3px solid #2E3C4D;
+    /* Cool locked system: soft-white paper, Cloud gray, Clay Rose accent, Navy ink. */
+    .tf { position:relative; background:#F2F3F3; color:#23262a; border-top:3px solid #2E3C4D;
       font-family:'Inter',sans-serif; }
     .tf-inner { max-width:1160px; margin:0 auto; padding:64px 40px 96px; }
-    .tf-eyebrow { font-size:12px; letter-spacing:.24em; text-transform:uppercase; color:#c98a3f; font-weight:600; text-align:center; margin-bottom:14px; }
+    .tf-eyebrow { font-size:12px; letter-spacing:.24em; text-transform:uppercase; color:#C4796B; font-weight:600; text-align:center; margin-bottom:14px; }
     .tf h2 { font-family:'Spectral',Georgia,serif; font-weight:500; font-size:34px; color:#2E3C4D; text-align:center; margin-bottom:10px; }
-    .tf-note { max-width:600px; margin:0 auto 8px; text-align:center; font-size:14px; line-height:1.6; color:#6b6459; }
-    .tf-sec-title { font-family:'Spectral',Georgia,serif; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:#234E3C; font-weight:600; margin:52px 0 18px; }
+    .tf-note { max-width:600px; margin:0 auto 8px; text-align:center; font-size:14px; line-height:1.6; color:#6b7580; }
+    .tf-sec-title { font-family:'Spectral',Georgia,serif; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:#2E3C4D; font-weight:600; margin:52px 0 18px; }
     .tf-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; }
     @media (max-width:980px){ .tf-grid{ grid-template-columns:repeat(3,1fr);} }
     @media (max-width:720px){ .tf-grid{ grid-template-columns:repeat(2,1fr);} }
     @media (max-width:480px){ .tf-grid{ grid-template-columns:1fr;} }
-    .tf-card { border:1px solid #e6ddcd; border-radius:14px; overflow:hidden; background:#fff; }
-    .tf-art { aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; padding:15%; position:relative; background:#f3eee4; }
-    .tf-art.checker { background:conic-gradient(#e2dcce 90deg,#f4efe4 0 180deg,#e2dcce 0 270deg,#f4efe4 0) 0 0/24px 24px; }
+    .tf-card { border:1px solid #e2e6e5; border-radius:14px; overflow:hidden; background:#fff; }
+    .tf-art { aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; padding:15%; position:relative; background:#e9edec; }
+    .tf-art.checker { background:conic-gradient(#e6eae9 90deg,#f4f6f5 0 180deg,#e6eae9 0 270deg,#f4f6f5 0) 0 0/24px 24px; }
     .tf-art svg, .tf-art img { width:100%; height:100%; display:block; object-fit:contain; }
     .tf-art img.px { width:auto; height:auto; }
     .tf-meta { padding:13px 15px 15px; text-align:center; }
-    .tf-meta h3 { font-family:'Spectral',Georgia,serif; font-size:16px; font-weight:500; color:#234E3C; margin-bottom:2px; }
-    .tf-meta p { font-size:12px; line-height:1.5; color:#8a8377; }
-    .tf-meta code { font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:#a99; }
+    .tf-meta h3 { font-family:'Spectral',Georgia,serif; font-size:16px; font-weight:500; color:#2E3C4D; margin-bottom:2px; }
+    .tf-meta p { font-size:12px; line-height:1.5; color:#8a8f96; }
+    .tf-meta code { font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:#9aa4a2; }
     .tf-switch { display:flex; justify-content:center; margin:6px 0 4px; }
-    .tf-switch .sw { display:inline-flex; gap:4px; padding:5px; border:1px solid #e6ddcd; border-radius:12px; background:#fff; }
-    .tf-switch button { font:inherit; font-size:14px; font-weight:600; color:#6b6459; background:transparent; border:0; cursor:pointer; padding:9px 20px; border-radius:9px; display:flex; align-items:center; gap:8px; }
+    .tf-switch .sw { display:inline-flex; gap:4px; padding:5px; border:1px solid #e2e6e5; border-radius:12px; background:#fff; }
+    .tf-switch button { font:inherit; font-size:14px; font-weight:600; color:#6b7580; background:transparent; border:0; cursor:pointer; padding:9px 20px; border-radius:9px; display:flex; align-items:center; gap:8px; }
     .tf-switch button.on { color:#fff; }
     .tf-switch .d { display:inline-flex; gap:3px; } .tf-switch .d i { width:11px; height:11px; border-radius:50%; display:block; }
-    .tf-palnote { text-align:center; font-size:12.5px; color:#8a8377; margin:2px auto 0; }
+    .tf-palnote { text-align:center; font-size:12.5px; color:#8a8f96; margin:2px auto 0; }
     /* ============ END TEMP STAGING ============ */
   </style>
 </head>
@@ -99,10 +100,10 @@
   <section class="tf" id="staging">
     <div class="tf-inner">
       <p class="tf-eyebrow">Lawson Point · Internal</p>
-      <h2>Brand — palette &amp; accent</h2>
-      <p class="tf-note">Navy · Sage with <b>Clay Rose #C4796B</b> locked as the accent. Deciding the neutrals: flip between <b>Warm</b> (Linen paper + Dove gray) and <b>Cool</b> (soft-white paper + Cloud gray) to see the whole system each way — page, tiles, chart, logo grounds. Everything renders live.</p>
+      <h2>Brand — the final system</h2>
+      <p class="tf-note">The locked identity: <b>Navy · Sage</b> neutrals on <b>soft-white paper + Cloud gray</b>, with <b>Clay Rose #C4796B</b> as the accent. The whole system in context — page, tiles, chart, and the logo grid, where the point needn't be the accent. Everything renders live.</p>
       <iframe id="tf-frame" src="staging/system.html" title="Lawson Point brand system" scrolling="no"
-        style="width:100%;height:2600px;border:0;border-radius:14px;background:#faf6ee;display:block"></iframe>
+        style="width:100%;height:2600px;border:0;border-radius:14px;background:#F2F3F3;display:block"></iframe>
     </div>
   </section>
 
