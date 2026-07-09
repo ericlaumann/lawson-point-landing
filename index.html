@@ -49,11 +49,11 @@
     @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(4px)} }
 
     /* ============ BEGIN TEMP STAGING (remove this block + <section class="tf"> + /staging to revert) ============ */
-    .tf { position:relative; background:#faf6ee; color:#2a2621; border-top:3px solid #234E3C;
+    .tf { position:relative; background:#faf6ee; color:#2a2621; border-top:3px solid #2E3C4D;
       font-family:'Inter',sans-serif; }
     .tf-inner { max-width:1160px; margin:0 auto; padding:64px 40px 96px; }
     .tf-eyebrow { font-size:12px; letter-spacing:.24em; text-transform:uppercase; color:#c98a3f; font-weight:600; text-align:center; margin-bottom:14px; }
-    .tf h2 { font-family:'Spectral',Georgia,serif; font-weight:500; font-size:34px; color:#234E3C; text-align:center; margin-bottom:10px; }
+    .tf h2 { font-family:'Spectral',Georgia,serif; font-weight:500; font-size:34px; color:#2E3C4D; text-align:center; margin-bottom:10px; }
     .tf-note { max-width:600px; margin:0 auto 8px; text-align:center; font-size:14px; line-height:1.6; color:#6b6459; }
     .tf-sec-title { font-family:'Spectral',Georgia,serif; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:#234E3C; font-weight:600; margin:52px 0 18px; }
     .tf-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; }
@@ -99,60 +99,20 @@
   <section class="tf" id="staging">
     <div class="tf-inner">
       <p class="tf-eyebrow">Lawson Point · Internal</p>
-      <h2>Brand system</h2>
-      <p class="tf-note">Two palettes under evaluation — green vs blue. Same mark, same file set. Toggle to compare on your devices. The point's bands are true transparency (checkerboard = transparent).</p>
-      <div class="tf-switch"><div class="sw" id="tf-sw"></div></div>
-      <p class="tf-palnote" id="tf-palnote"></p>
-
-      <p class="tf-sec-title">Lockup — LP + point</p>
-      <div class="tf-grid" id="tf-lockups"></div>
-
-      <p class="tf-sec-title">The point — symbol</p>
-      <div class="tf-grid" id="tf-points"></div>
-
-      <p class="tf-sec-title">Icon / favicon — PNG</p>
-      <div class="tf-grid" id="tf-favicons"></div>
+      <h2>Brand — palette &amp; accent</h2>
+      <p class="tf-note">Locked on Navy · Sage · Mist · Linen · White. Click the accent chips to see the whole system shift — buttons, tiles, chart, form, and the logo — and help lock the final pop colour. Everything renders live.</p>
+      <iframe id="tf-frame" src="staging/system.html" title="Lawson Point brand system" scrolling="no"
+        style="width:100%;height:2600px;border:0;border-radius:14px;background:#faf6ee;display:block"></iframe>
     </div>
   </section>
 
   <script>
-  const TF_SETS={
-    green:{key:'green',name:'Hunter Green',primary:'#234E3C',pn:'green',pName:'Hunter Green',secondary:'#96B09D',sn:'sage',sName:'Sage',accent:'#E38C3E',aName:'Deepened Apricot'},
-    blue: {key:'blue', name:'Navy',        primary:'#2E3C4D',pn:'navy', pName:'Navy',        secondary:'#7E9BB8',sn:'lblue',sName:'Lighter blue',accent:'#F2A65A',aName:'Apricot'},
-  };
-  const TF_LINEN='#F7F2E8';
-  function tfCard(bg, src, title, sub, checker, px){
-    return `<div class="tf-card"><div class="tf-art${checker?' checker':''}" style="background:${bg}"><img class="${px?'px':''}" src="${src}" loading="lazy" alt=""></div>
-      <div class="tf-meta"><h3>${title}</h3><p>${sub}</p></div></div>`;
-  }
-  function tfRender(s){
-    const svg=`staging/${s.key}/svg/`, png=`staging/${s.key}/png/`, low=s.pName.toLowerCase();
-    document.querySelector('.tf').style.borderTopColor=s.primary;
-    document.querySelectorAll('.tf h2,.tf-sec-title,.tf-meta h3').forEach(e=>e.style.color=s.primary);
-    document.getElementById('tf-palnote').innerHTML=
-      `<b style="color:${s.primary}">${s.pName}</b> ${s.primary} &nbsp;·&nbsp; ${s.sName} ${s.secondary} &nbsp;·&nbsp; ${s.aName} ${s.accent}`;
-    document.getElementById('tf-lockups').innerHTML=[
-      [TF_LINEN, svg+`lockup-${s.pn}-apricot.svg`, 'Primary', s.pName+' + apricot · paper',0,0],
-      [s.primary, svg+'lockup-linen-apricot.svg', 'Reversed', 'linen + apricot · '+low,0,0],
-      [s.primary, svg+'lockup-white-apricot.svg', 'White + apricot', 'on '+low,0,0],
-      ['', svg+'lockup-white.svg', 'All white', 'transparent',1,0],
-      [s.primary, svg+`lockup-${s.sn}-apricot.svg`, s.sName+' + apricot', 'on '+low,0,0],
-      [TF_LINEN, svg+`lockup-mono-${s.pn}.svg`, 'Mono '+low, 'paper',0,0],
-      [s.primary, svg+'lockup-mono-apricot.svg', 'Mono apricot', 'on '+low,0,0],
-    ].map(a=>tfCard(...a)).join('');
-    document.getElementById('tf-points').innerHTML=[
-      ['point-apricot','Apricot'],['point-'+s.pn,s.pName],['point-white','White'],['point-linen','Linen'],['point-'+s.sn,s.sName]
-    ].map(([f,n])=>tfCard('',svg+f+'.svg',n,'transparent',1,0)).join('');
-    document.getElementById('tf-favicons').innerHTML=[512,180,64,32,16]
-      .map(sz=>tfCard(TF_LINEN,png+`icon-${sz}.png`,sz+'px',`icon-${sz}.png`,0,1)).join('');
-    [...document.getElementById('tf-sw').children].forEach(b=>{const on=b.dataset.k===s.key;b.classList.toggle('on',on);b.style.background=on?s.primary:'transparent';});
-  }
-  Object.values(TF_SETS).forEach(s=>{
-    const b=document.createElement('button');b.dataset.k=s.key;
-    b.innerHTML=`<span class="d"><i style="background:${s.primary}"></i><i style="background:${s.secondary}"></i><i style="background:${s.accent}"></i></span>${s.name}`;
-    b.onclick=()=>tfRender(s); document.getElementById('tf-sw').appendChild(b);
-  });
-  tfRender(TF_SETS.green);
+  (function(){
+    var f=document.getElementById('tf-frame');
+    window.addEventListener('message',function(e){
+      if(e.data && typeof e.data.lpHeight==='number'){ f.style.height=(e.data.lpHeight+24)+'px'; }
+    });
+  })();
   </script>
   <!-- ============ END TEMP STAGING ============ -->
 </body>
