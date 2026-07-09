@@ -14,22 +14,23 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    /* Colour graded to the Copper / Navy / Beige palette (navy shadows, copper
-       highlights) in the video; the card wears the palette — Linen text, Sand
-       muted, a Copper hairline, over a Deep Navy scrim. */
-    :root { --linen:#F7F2E8; --sand:#E9DFC9; --copper:#B0693C; --navy:24,42,62; }
+    /* On brand: the footage is tinted to Navy #2E3C4D via a colour blend, with
+       cool paper text, a Cloud-muted subline, and a Clay Rose hairline. */
+    :root { --linen:#F2F3F3; --sand:#DEE3E2; --copper:#C4796B; --navy:46,60,77; }
     * { margin:0; padding:0; box-sizing:border-box; }
     html, body { height:100%; }
     body {
-      background:#0f1826;
+      background:#1b242f;
       color:var(--linen);
       font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
     }
-    .ground { position:fixed; inset:0; z-index:-2; width:100%; height:100%; object-fit:cover; filter:brightness(0.9); }
+    .ground { position:fixed; inset:0; z-index:-3; width:100%; height:100%; object-fit:cover; filter:brightness(0.92) saturate(0.55); }
+    /* Navy colour-blend tints the footage to the brand blue while keeping its motion. */
+    .tint { position:fixed; inset:0; z-index:-2; background:rgb(var(--navy)); mix-blend-mode:color; opacity:0.62; }
     .scrim { position:fixed; inset:0; z-index:-1; background:
-      radial-gradient(ellipse 60rem 30rem at 50% 47%, rgba(var(--navy),0.5), rgba(var(--navy),0.28) 62%, rgba(var(--navy),0.16)),
-      linear-gradient(to top, rgba(var(--navy),0.55), rgba(var(--navy),0.1) 32%, rgba(var(--navy),0.1) 74%, rgba(var(--navy),0.42)); }
-    @media (prefers-reduced-motion: reduce) { .ground { display:none; } }
+      radial-gradient(ellipse 60rem 30rem at 50% 47%, rgba(var(--navy),0.45), rgba(var(--navy),0.26) 62%, rgba(var(--navy),0.16)),
+      linear-gradient(to top, rgba(var(--navy),0.6), rgba(var(--navy),0.12) 32%, rgba(var(--navy),0.12) 74%, rgba(var(--navy),0.46)); }
+    @media (prefers-reduced-motion: reduce) { .ground, .tint { display:none; } }
     /* Hero — unchanged, now its own full-viewport section */
     .hero { position:relative; min-height:100vh; display:flex; flex-direction:column;
       align-items:center; justify-content:center; text-align:center; padding:2rem 1.5rem; }
@@ -38,13 +39,13 @@
     @media (prefers-reduced-motion: reduce) { main { animation:none; } }
     .name { font-family:'Spectral',Georgia,serif; font-weight:500; font-size:clamp(1.6rem,5.2vw,3rem); letter-spacing:0.18em; text-indent:0.18em; text-transform:uppercase; line-height:1.2; text-shadow:0 1px 26px rgba(0,0,0,0.55); }
     .sub { margin-top:0.9rem; font-size:clamp(0.62rem,1.6vw,0.82rem); font-weight:500; letter-spacing:0.52em; text-indent:0.52em; text-transform:uppercase; color:var(--sand); text-shadow:0 1px 16px rgba(0,0,0,0.6); }
-    .rule { width:3.5rem; height:2px; background:var(--copper); margin:2.75rem auto; box-shadow:0 0 14px rgba(176,105,60,0.5); }
+    .rule { width:3.5rem; height:2px; background:var(--copper); margin:2.75rem auto; box-shadow:0 0 14px rgba(196,121,107,0.55); }
     .status { font-family:'Spectral',Georgia,serif; font-style:italic; font-size:clamp(1rem,2.4vw,1.2rem); color:var(--sand); text-shadow:0 1px 16px rgba(0,0,0,0.6); }
-    footer { position:absolute; bottom:1.75rem; left:0; right:0; font-size:0.7rem; letter-spacing:0.08em; color:rgba(247,242,232,0.6); text-align:center; }
+    footer { position:absolute; bottom:1.75rem; left:0; right:0; font-size:0.7rem; letter-spacing:0.08em; color:rgba(242,243,243,0.6); text-align:center; }
     /* very subtle scroll cue — only meaningful to someone who knows to look */
     .cue { position:absolute; bottom:3.4rem; left:0; right:0; text-align:center;
       font-size:0.6rem; letter-spacing:0.4em; text-indent:0.4em; text-transform:uppercase;
-      color:rgba(247,242,232,0.32); }
+      color:rgba(242,243,243,0.32); }
     .cue span { display:block; margin-top:0.5rem; font-size:0.8rem; letter-spacing:0; animation:bob 2.4s ease-in-out infinite; }
     @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(4px)} }
 
@@ -83,6 +84,7 @@
   <video class="ground" autoplay muted loop playsinline preload="auto" poster="poster.jpg" aria-hidden="true">
     <source src="hero.mp4" type="video/mp4">
   </video>
+  <div class="tint" role="presentation"></div>
   <div class="scrim" role="presentation"></div>
 
   <section class="hero">
