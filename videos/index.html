@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lawson Point — hero video picker</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --linen:#F2F3F3; --sand:#DEE3E2; --clay:#C4796B; --navy:46,60,77; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{background:#1b242f;color:var(--linen);font-family:'Inter',ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .ground{position:fixed;inset:0;z-index:-3;width:100%;height:100%;object-fit:cover}
+  .tint{position:fixed;inset:0;z-index:-2}
+  .scrim{position:fixed;inset:0;z-index:-1}
+  .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem 1.5rem}
+  .name{font-family:'Spectral',Georgia,serif;font-weight:500;font-size:clamp(1.6rem,5.2vw,3rem);letter-spacing:0.18em;text-indent:0.18em;text-transform:uppercase;line-height:1.2;text-shadow:0 1px 26px rgba(0,0,0,0.55)}
+  .sub{margin-top:0.9rem;font-size:clamp(0.62rem,1.6vw,0.82rem);font-weight:500;letter-spacing:0.52em;text-indent:0.52em;text-transform:uppercase;color:var(--sand);text-shadow:0 1px 16px rgba(0,0,0,0.6)}
+  .rule{width:3.5rem;height:2px;background:var(--clay);margin:2.75rem auto;box-shadow:0 0 14px rgba(196,121,107,0.55)}
+  .status{font-family:'Spectral',Georgia,serif;font-style:italic;font-size:clamp(1rem,2.4vw,1.2rem);color:var(--sand);text-shadow:0 1px 16px rgba(0,0,0,0.6)}
+  .panel{position:fixed;left:50%;transform:translateX(-50%);bottom:1.1rem;z-index:10;
+    background:rgba(20,27,36,0.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border:1px solid rgba(222,227,226,0.16);border-radius:14px;padding:13px 16px 14px;
+    display:flex;flex-direction:column;gap:10px;max-width:min(94vw,860px);box-shadow:0 10px 40px rgba(0,0,0,0.4)}
+  .panel.hide{display:none}
+  .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .lbl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--sand);opacity:.7;width:58px;flex:none}
+  .btn{font:inherit;font-size:13px;font-weight:500;color:var(--linen);background:rgba(242,243,243,0.07);
+    border:1px solid rgba(242,243,243,0.14);border-radius:8px;padding:8px 14px;cursor:pointer;transition:.15s}
+  .btn:hover{background:rgba(242,243,243,0.14)}
+  .btn.on{background:var(--clay);border-color:var(--clay);color:#fff;font-weight:600}
+  .foot{display:flex;align-items:center;gap:10px;justify-content:space-between;border-top:1px solid rgba(242,243,243,0.12);padding-top:10px}
+  .now{font-family:'Spectral',serif;font-size:14px;color:var(--linen)}
+  .now b{color:var(--clay);font-weight:600;font-style:normal}
+  .hint{font-size:11px;color:var(--sand);opacity:.6;white-space:nowrap}
+  .fab{position:fixed;right:1.1rem;bottom:1.1rem;z-index:11;font:inherit;font-size:12px;color:var(--linen);
+    background:rgba(20,27,36,0.82);backdrop-filter:blur(14px);border:1px solid rgba(222,227,226,0.16);
+    border-radius:9px;padding:9px 13px;cursor:pointer}
+  .loading{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:5;
+    font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand);opacity:.7}
+  @media(max-width:560px){ .lbl{width:100%} }
+</style>
+</head>
+<body>
+  <video class="ground" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+  <div class="tint" role="presentation"></div>
+  <div class="scrim" role="presentation"></div>
+  <div class="loading" id="loading">loading…</div>
+
+  <section class="hero">
+    <h1 class="name">Lawson Point</h1>
+    <div class="sub">Partners</div>
+    <div class="rule" role="presentation"></div>
+    <p class="status">A firm in formation.</p>
+  </section>
+
+  <button class="fab" id="fab" title="Show / hide (H)">controls</button>
+  <div class="panel" id="panel">
+    <div class="row" id="vids"><span class="lbl">Video</span></div>
+    <div class="row" id="treats"><span class="lbl">Look</span></div>
+    <div class="foot">
+      <span class="now" id="now"></span>
+      <span class="hint">Tap a video and a look to compare · H hides this</span>
+    </div>
+  </div>
+
+<script>
+const VIDEOS=[
+  {key:'1', id:'Option 1', file:'v1.mp4'},
+  {key:'2', id:'Option 2', file:'v2.mp4'},
+  {key:'3', id:'Option 3', file:'v3.mp4'},
+  {key:'4', id:'Option 4', file:'v4.mp4'},
+  {key:'5', id:'Current',  file:'../hero.mp4'},
+];
+const TREATS=[
+  {key:'natural', name:'Natural',      filter:'brightness(0.90)',                tint:null,                            scrim:'8,10,14'},
+  {key:'navy',    name:'Navy · locked',filter:'brightness(0.92) saturate(0.55)', tint:{c:'46,60,77',m:'color',o:0.62}, scrim:'46,60,77'},
+  {key:'soft',    name:'Navy · soft',  filter:'brightness(0.94) saturate(0.70)', tint:{c:'46,60,77',m:'color',o:0.40}, scrim:'46,60,77'},
+  {key:'deep',    name:'Navy · deep',  filter:'brightness(0.85) saturate(0.50)', tint:{c:'46,60,77',m:'color',o:0.80}, scrim:'46,60,77'},
+  {key:'cool',    name:'Cool grade',   filter:'brightness(0.92) saturate(0.78)', tint:{c:'46,60,77',m:'soft-light',o:0.55}, scrim:'30,42,58'},
+  {key:'sage',    name:'Sage cast',    filter:'brightness(0.92) saturate(0.62)', tint:{c:'150,176,157',m:'color',o:0.42}, scrim:'58,72,64'},
+];
+const $=s=>document.querySelector(s);
+const vid=$('.ground'), tintEl=$('.tint'), scrimEl=$('.scrim');
+const params=new URLSearchParams(location.search);
+let vi=VIDEOS.findIndex(v=>v.key===(params.get('v')||localStorage.getItem('lp-pick-v')||'5')); if(vi<0)vi=4;
+let ti=TREATS.findIndex(t=>t.key===(params.get('t')||localStorage.getItem('lp-pick-t')||'navy'));  if(ti<0)ti=1;
+
+function scrimCss(rgb){return `radial-gradient(ellipse 60rem 30rem at 50% 47%, rgba(${rgb},0.45), rgba(${rgb},0.26) 62%, rgba(${rgb},0.15)),`
+  +`linear-gradient(to top, rgba(${rgb},0.58), rgba(${rgb},0.12) 32%, rgba(${rgb},0.12) 74%, rgba(${rgb},0.44))`;}
+function applyTreat(){
+  const t=TREATS[ti];
+  vid.style.filter=t.filter;
+  if(t.tint){tintEl.style.display='block';tintEl.style.background=`rgb(${t.tint.c})`;tintEl.style.mixBlendMode=t.tint.m;tintEl.style.opacity=t.tint.o;}
+  else tintEl.style.display='none';
+  scrimEl.style.background=scrimCss(t.scrim);
+  $('#now').innerHTML=`<b>${VIDEOS[vi].id}</b> — ${t.name}`;
+  [...$('#treats').querySelectorAll('.btn')].forEach((b,i)=>b.classList.toggle('on',i===ti));
+  localStorage.setItem('lp-pick-t',t.key); syncUrl();
+}
+function loadVideo(){
+  const v=VIDEOS[vi]; $('#loading').style.display='flex';
+  vid.src=v.file; vid.load(); vid.play().catch(()=>{});
+  [...$('#vids').querySelectorAll('.btn')].forEach((b,i)=>b.classList.toggle('on',i===vi));
+  localStorage.setItem('lp-pick-v',v.key); syncUrl();
+}
+vid.addEventListener('loadeddata',()=>$('#loading').style.display='none');
+function syncUrl(){history.replaceState(null,'','?'+new URLSearchParams({v:VIDEOS[vi].key,t:TREATS[ti].key}));}
+
+VIDEOS.forEach((v,i)=>{const b=document.createElement('button');b.className='btn';b.textContent=v.id;
+  b.onclick=()=>{vi=i;loadVideo();applyTreat();};$('#vids').appendChild(b);});
+TREATS.forEach((t,i)=>{const b=document.createElement('button');b.className='btn';b.textContent=t.name;
+  b.onclick=()=>{ti=i;applyTreat();};$('#treats').appendChild(b);});
+
+addEventListener('keydown',e=>{
+  if(e.key>='1'&&e.key<=String(VIDEOS.length)){vi=+e.key-1;loadVideo();applyTreat();}
+  else if(e.key==='ArrowRight'){ti=(ti+1)%TREATS.length;applyTreat();}
+  else if(e.key==='ArrowLeft'){ti=(ti-1+TREATS.length)%TREATS.length;applyTreat();}
+  else if(e.key.toLowerCase()==='h'){$('#panel').classList.toggle('hide');}
+});
+$('#fab').onclick=()=>$('#panel').classList.toggle('hide');
+loadVideo(); applyTreat();
+</script>
+</body>
+</html>
