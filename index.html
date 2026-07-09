@@ -69,6 +69,12 @@
     .tf-meta h3 { font-family:'Spectral',Georgia,serif; font-size:16px; font-weight:500; color:#234E3C; margin-bottom:2px; }
     .tf-meta p { font-size:12px; line-height:1.5; color:#8a8377; }
     .tf-meta code { font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:#a99; }
+    .tf-switch { display:flex; justify-content:center; margin:6px 0 4px; }
+    .tf-switch .sw { display:inline-flex; gap:4px; padding:5px; border:1px solid #e6ddcd; border-radius:12px; background:#fff; }
+    .tf-switch button { font:inherit; font-size:14px; font-weight:600; color:#6b6459; background:transparent; border:0; cursor:pointer; padding:9px 20px; border-radius:9px; display:flex; align-items:center; gap:8px; }
+    .tf-switch button.on { color:#fff; }
+    .tf-switch .d { display:inline-flex; gap:3px; } .tf-switch .d i { width:11px; height:11px; border-radius:50%; display:block; }
+    .tf-palnote { text-align:center; font-size:12.5px; color:#8a8377; margin:2px auto 0; }
     /* ============ END TEMP STAGING ============ */
   </style>
 </head>
@@ -94,7 +100,9 @@
     <div class="tf-inner">
       <p class="tf-eyebrow">Lawson Point · Internal</p>
       <h2>Brand system</h2>
-      <p class="tf-note">Logo, icon &amp; favicon — Hunter Green #234E3C · Sage #96B09D · Deepened Apricot #E38C3E. Live vector files; the point's bands are true transparency (checkerboard = transparent). Check across your devices.</p>
+      <p class="tf-note">Two palettes under evaluation — green vs blue. Same mark, same file set. Toggle to compare on your devices. The point's bands are true transparency (checkerboard = transparent).</p>
+      <div class="tf-switch"><div class="sw" id="tf-sw"></div></div>
+      <p class="tf-palnote" id="tf-palnote"></p>
 
       <p class="tf-sec-title">Lockup — LP + point</p>
       <div class="tf-grid" id="tf-lockups"></div>
@@ -108,30 +116,43 @@
   </section>
 
   <script>
-  const SVG='staging/svg/', PNG='staging/png/';
-  function card(bg, inner, title, sub, checker){
-    return `<div class="tf-card"><div class="tf-art${checker?' checker':''}" style="background:${bg}">${inner}</div>
+  const TF_SETS={
+    green:{key:'green',name:'Hunter Green',primary:'#234E3C',pn:'green',pName:'Hunter Green',secondary:'#96B09D',sn:'sage',sName:'Sage',accent:'#E38C3E',aName:'Deepened Apricot'},
+    blue: {key:'blue', name:'Navy',        primary:'#2E3C4D',pn:'navy', pName:'Navy',        secondary:'#7E9BB8',sn:'lblue',sName:'Lighter blue',accent:'#F2A65A',aName:'Apricot'},
+  };
+  const TF_LINEN='#F7F2E8';
+  function tfCard(bg, src, title, sub, checker, px){
+    return `<div class="tf-card"><div class="tf-art${checker?' checker':''}" style="background:${bg}"><img class="${px?'px':''}" src="${src}" loading="lazy" alt=""></div>
       <div class="tf-meta"><h3>${title}</h3><p>${sub}</p></div></div>`;
   }
-  const im=(f,cls)=>`<img class="${cls||''}" src="${f}" loading="lazy" alt="">`;
-
-  const lockups=[
-    ['#F7F2E8', im(SVG+'lockup-green-apricot.svg'), 'Primary', 'Green + apricot · paper', 0],
-    ['#234E3C', im(SVG+'lockup-linen-apricot.svg'), 'Reversed', 'Linen + apricot · green', 0],
-    ['#234E3C', im(SVG+'lockup-white-apricot.svg'), 'White + apricot', 'on green', 0],
-    ['',        im(SVG+'lockup-white.svg'), 'All white', 'transparent', 1],
-    ['#234E3C', im(SVG+'lockup-sage-apricot.svg'), 'Sage + apricot', 'on green', 0],
-    ['#F7F2E8', im(SVG+'lockup-mono-green.svg'), 'Mono green', 'paper', 0],
-    ['#234E3C', im(SVG+'lockup-mono-apricot.svg'), 'Mono apricot', 'on green', 0],
-  ];
-  const points=[
-    ['point-apricot.svg','Apricot'],['point-green.svg','Green'],['point-white.svg','White'],
-    ['point-linen.svg','Linen'],['point-sage.svg','Sage'],
-  ].map(([f,n])=>['', im(SVG+f), n, 'transparent', 1]);
-  const favicons=[512,180,64,32,16].map(s=>['#F7F2E8', im(PNG+'icon-'+s+'.png','px'), s+'px', 'icon-'+s+'.png', 0]);
-
-  const put=(id,arr)=>document.getElementById(id).innerHTML=arr.map(c=>card(...c)).join('');
-  put('tf-lockups',lockups); put('tf-points',points); put('tf-favicons',favicons);
+  function tfRender(s){
+    const svg=`staging/${s.key}/svg/`, png=`staging/${s.key}/png/`, low=s.pName.toLowerCase();
+    document.querySelector('.tf').style.borderTopColor=s.primary;
+    document.querySelectorAll('.tf h2,.tf-sec-title,.tf-meta h3').forEach(e=>e.style.color=s.primary);
+    document.getElementById('tf-palnote').innerHTML=
+      `<b style="color:${s.primary}">${s.pName}</b> ${s.primary} &nbsp;·&nbsp; ${s.sName} ${s.secondary} &nbsp;·&nbsp; ${s.aName} ${s.accent}`;
+    document.getElementById('tf-lockups').innerHTML=[
+      [TF_LINEN, svg+`lockup-${s.pn}-apricot.svg`, 'Primary', s.pName+' + apricot · paper',0,0],
+      [s.primary, svg+'lockup-linen-apricot.svg', 'Reversed', 'linen + apricot · '+low,0,0],
+      [s.primary, svg+'lockup-white-apricot.svg', 'White + apricot', 'on '+low,0,0],
+      ['', svg+'lockup-white.svg', 'All white', 'transparent',1,0],
+      [s.primary, svg+`lockup-${s.sn}-apricot.svg`, s.sName+' + apricot', 'on '+low,0,0],
+      [TF_LINEN, svg+`lockup-mono-${s.pn}.svg`, 'Mono '+low, 'paper',0,0],
+      [s.primary, svg+'lockup-mono-apricot.svg', 'Mono apricot', 'on '+low,0,0],
+    ].map(a=>tfCard(...a)).join('');
+    document.getElementById('tf-points').innerHTML=[
+      ['point-apricot','Apricot'],['point-'+s.pn,s.pName],['point-white','White'],['point-linen','Linen'],['point-'+s.sn,s.sName]
+    ].map(([f,n])=>tfCard('',svg+f+'.svg',n,'transparent',1,0)).join('');
+    document.getElementById('tf-favicons').innerHTML=[512,180,64,32,16]
+      .map(sz=>tfCard(TF_LINEN,png+`icon-${sz}.png`,sz+'px',`icon-${sz}.png`,0,1)).join('');
+    [...document.getElementById('tf-sw').children].forEach(b=>{const on=b.dataset.k===s.key;b.classList.toggle('on',on);b.style.background=on?s.primary:'transparent';});
+  }
+  Object.values(TF_SETS).forEach(s=>{
+    const b=document.createElement('button');b.dataset.k=s.key;
+    b.innerHTML=`<span class="d"><i style="background:${s.primary}"></i><i style="background:${s.secondary}"></i><i style="background:${s.accent}"></i></span>${s.name}`;
+    b.onclick=()=>tfRender(s); document.getElementById('tf-sw').appendChild(b);
+  });
+  tfRender(TF_SETS.green);
   </script>
   <!-- ============ END TEMP STAGING ============ -->
 </body>
