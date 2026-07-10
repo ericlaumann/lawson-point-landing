@@ -27,16 +27,18 @@ const LET={"LAWSON": {"d": "M53.0 0V16L136.0 57V603L53.0 644V660H355.0V644L261.0
   .val{width:34px;text-align:right;font-variant-numeric:tabular-nums;color:#8894a0}
   .stage svg .lp{fill:var(--lp)} .stage svg .pt{fill:var(--point)}
   .exact{font-size:10px;color:#96B09D;font-weight:700;letter-spacing:.05em;margin-left:6px}
+  .num{width:62px;flex:0 0 62px;font:inherit;font-size:11px;padding:3px 6px;border:1px solid #cfd4d8;border-radius:6px;color:#22303f;text-align:right;font-variant-numeric:tabular-nums}
+  .num::-webkit-inner-spin-button{opacity:.5}
+  .grp{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#96B09D;margin:12px 0 3px}
 
-  .palbar{background:#F2F3F3;border-bottom:3px solid #2E3C4D;font-family:'Inter',sans-serif}
+  .palbar{background:#F2F3F3;border-bottom:3px solid #2E3C4D;font-family:'Inter',sans-serif;margin:-26px -26px 22px}
   .palbar-inner{max-width:1200px;margin:0 auto;padding:20px 26px}
   .palbar-title{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#2E3C4D;font-weight:700;margin-bottom:14px}
   .palbar-title span{color:#C4796B;margin-left:10px;letter-spacing:.08em;font-weight:600}
   .palrow{display:flex;flex-wrap:wrap;gap:20px}
   .palrow .sw{display:flex;align-items:center;gap:8px;font-size:13px;color:#2E3C4D}
   .palrow .chip{width:26px;height:26px;border-radius:6px;display:inline-block;flex:0 0 26px}
-  .palrow b{font-weight:600}
-  .palrow code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:#8a8f96}
+  .palrow b{font-weight:600}.palrow code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:#8a8f96}
   .palrow em{font-style:normal;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#C4796B;font-weight:700}
 </style></head>
 <body>
@@ -51,8 +53,6 @@ const LET={"LAWSON": {"d": "M53.0 0V16L136.0 57V603L53.0 644V660H355.0V644L261.0
     <div class="sw"><span class="chip" style="background:#C4796B"></span><b>Clay Rose</b><code>#C4796B</code> <em>accent</em></div>
   </div>
 </div></div>
-
-
 <div class="marks" id="marks"></div>
 
 <script>
@@ -81,31 +81,61 @@ function disc(cx,cy,D,cols,id){
   const s=D/180;
   return `<g transform="translate(${cx},${cy}) scale(${s}) translate(-100,-100)">${discInner(cols,id)}</g>`;
 }
-// letter run (y-up font units) flipped to screen at baseline (x0,y0), unit scale
-function txt(key,x0,y0,fill){
-  return `<g transform="translate(${x0},${y0}) scale(1,-1)"><path d="${LET[key].d}" fill="${fill}"/></g>`;
+// letter run (y-up font units) flipped to screen at baseline (x0,y0), with optional scale
+function txt(key,x0,y0,fill,sc){
+  sc=sc||1;
+  return `<g transform="translate(${x0},${y0}) scale(${sc},${-sc})"><path d="${LET[key].d}" fill="${fill}"/></g>`;
 }
 function discCols(p){ return p.slivers?p.pcols:[p.point,p.point,p.point,p.point]; }
 
+// reusable control specs {label, p(aram), min, max, step, group?}
+const DISC_CTL=[
+  {label:"Disc size", p:"dd", min:60, max:2400, step:1},
+  {label:"Disc X",    p:"dx", min:-2500, max:10000, step:1},
+  {label:"Disc Y",    p:"dy", min:-2500, max:2500, step:1},
+];
+const xyz=(g,sp,min,max)=>[
+  {group:g, label:"Size", p:sp+"s", min:0.1, max:6, step:0.02},
+  {label:"X", p:sp+"x", min, max, step:1},
+  {label:"Y", p:sp+"y", min:-4000, max:4000, step:1},
+];
+const discXYZ=(g,pd,min,max)=>[
+  {group:g, label:"Size", p:pd+"d", min:40, max:5000, step:1},
+  {label:"X", p:pd+"x", min, max, step:1},
+  {label:"Y", p:pd+"y", min:-4000, max:4000, step:1},
+];
+
 // ---- mark builders: return inner SVG (screen coords, baseline y=0) ----
 const MARKS={
- m1:{title:"1 · LP monogram", exact:true, roles:["lp","point"],
-   def:{bg:"#2E3C4D",lp:"#FFFFFF",point:"#FFFFFF",dx:1050,dy:1160,dd:180},
-   build:p=>`<g class="lp">${LP_SNIPPET}</g>`+disc(p.dx,p.dy,p.dd,[p.point,p.point,p.point,p.point],"m1")},
- m2:{title:"2 · Wordmark (P●INT)", roles:["ink","point"],
-   def:{bg:"#2E3C4D",ink:"#FFFFFF",point:"#FFFFFF",dx:6230,dy:-330,dd:660},
-   build:p=>txt("LAWSON",0,0,p.ink)+txt("P",5233,0,p.ink)+disc(p.dx,p.dy,p.dd,discCols(p),"m2")+txt("INT",6600,0,p.ink)},
- m3:{title:"3 · Point disc (4 slivers)", roles:["s1","s2","s3","s4"], slivers:true, staticDisc:true,
-   def:{bg:"#2E3C4D",s1:"#FFFFFF",s2:"#FFFFFF",s3:"#FFFFFF",s4:"#FFFFFF",dx:100,dy:-100,dd:200},
+ m1:{title:"1 · LP monogram", exact:true, roles:["lp","point"], controls:DISC_CTL,
+   def:{bg:"#2E3C4D",lp:"#FFFFFF",point:"#96B09D",dx:1000,dy:1004,dd:165},
+   build:p=>disc(p.dx,p.dy,p.dd,[p.point,p.point,p.point,p.point],"m1")+`<g class="lp">${LP_SNIPPET}</g>`},
+ m2:{title:"2 · Wordmark (P●INT)", roles:["ink","point"], controls:DISC_CTL,
+   def:{bg:"#2E3C4D",ink:"#FFFFFF",point:"#96B09D",dx:6268,dy:-330,dd:673},
+   build:p=>disc(p.dx,p.dy,p.dd,discCols(p),"m2")+txt("LAWSON",0,0,p.ink)+txt("P",5233,0,p.ink)+txt("INT",6600,0,p.ink)},
+ m3:{title:"3 · Point disc (4 slivers)", roles:["s1","s2","s3","s4"], slivers:true, staticDisc:true, controls:[],
+   def:{bg:"#2E3C4D",s1:"#96B09D",s2:"#96B09D",s3:"#96B09D",s4:"#96B09D",dx:100,dy:-100,dd:200},
    build:p=>disc(p.dx,p.dy,p.dd,[p.s1,p.s2,p.s3,p.s4],"m3")},
- m4:{title:"4 · LAWSON + point (disc behind)", roles:["lawson","point"],
-   def:{bg:"#2E3C4D",lawson:"#FFFFFF",point:"#C4796B",dx:3700,dy:-330,dd:820},
+ m4:{title:"4 · LAWSON + point", roles:["lawson","point"], controls:DISC_CTL,
+   def:{bg:"#2E3C4D",lawson:"#FFFFFF",point:"#C4796B",dx:2395,dy:-330,dd:2400},
    build:p=>disc(p.dx,p.dy,p.dd,discCols(p),"m4")+txt("LAWSON",0,0,p.lawson)},
- m5:{title:"5 · Horizontal lockup", roles:["disc","lawson","pointword"],
-   def:{bg:"#2E3C4D",disc:"#FFFFFF",lawson:"#FFFFFF",pointword:"#FFFFFF",dx:300,dy:-330,dd:560},
+ m5:{title:"5 · Horizontal lockup", roles:["disc","lawson","pointword"], controls:DISC_CTL,
+   def:{bg:"#2E3C4D",disc:"#96B09D",lawson:"#FFFFFF",pointword:"#96B09D",dx:187,dy:-330,dd:1108},
    build:p=>disc(p.dx,p.dy,p.dd,[p.disc,p.disc,p.disc,p.disc],"m5")+txt("LAWSON",860,0,p.lawson)+txt("POINT",6100,0,p.pointword)},
+ m6:{title:"6 · Free · L + P + point", roles:["letters","point"],
+   controls:[...xyz("L","l",-4000,10000), ...xyz("P","p",-4000,10000), ...discXYZ("Point","pt",-4000,10000)],
+   def:{bg:"#2E3C4D",letters:"#FFFFFF",point:"#96B09D",
+        ls:1,lx:0,ly:0, ps:1,px:560,py:0, ptd:253,ptx:1140,pty:-120},
+   build:p=>disc(p.ptx,p.pty,p.ptd,[p.point,p.point,p.point,p.point],"m6")
+     +txt("L",p.lx,p.ly,p.letters,p.ls)+txt("P",p.px,p.py,p.letters,p.ps)},
+ m7:{title:"7 · Free · LAWSON + POINT + point", roles:["lawson","pointword","point"],
+   controls:[...xyz("LAWSON","w",-4000,12000), ...xyz("POINT","q",-4000,12000), ...discXYZ("Point mark","pt",-4000,12000)],
+   def:{bg:"#2E3C4D",lawson:"#FFFFFF",pointword:"#FFFFFF",point:"#96B09D",
+        ws:1,wx:0,wy:0, qs:1,qx:0,qy:900, ptd:1558,ptx:4445,pty:971},
+   build:p=>disc(p.ptx,p.pty,p.ptd,[p.point,p.point,p.point,p.point],"m7")
+     +txt("LAWSON",p.wx,p.wy,p.lawson,p.ws)+txt("POINT",p.qx,p.qy,p.pointword,p.qs)},
 };
-const ROLE_LABEL={lp:"LP",point:"Point",ink:"Letters",s1:"Sliver 1",s2:"Sliver 2",s3:"Sliver 3",s4:"Sliver 4",lawson:"LAWSON",disc:"Disc",pointword:"POINT"};
+const ROLE_LABEL={lp:"LP",point:"Point",ink:"Letters",letters:"L + P",s1:"Sliver 1",s2:"Sliver 2",s3:"Sliver 3",s4:"Sliver 4",lawson:"LAWSON",disc:"Disc",pointword:"POINT"};
 let DESIGNER1="", LP_SNIPPET="";
 const state={};
 Object.keys(MARKS).forEach(k=>state[k]={...MARKS[k].def});
@@ -143,10 +173,12 @@ function buildCards(){
     const m=MARKS[k];
     const colorRows=m.roles.map(r=>`<div class="row"><span class="lbl">${ROLE_LABEL[r]}</span>${swatches(k,r)}</div>`).join("");
     const bgRow=`<div class="row"><span class="lbl">BG</span>${swatches(k,'bg')}</div>`;
-    const sliders=m.staticDisc?"":`
-      <div class="row"><span class="lbl">Disc size</span><input type="range" min="60" max="2400" value="${state[k].dd}" data-k="${k}" data-p="dd"><span class="val" id="v-${k}-dd">${state[k].dd}</span></div>
-      <div class="row"><span class="lbl">Disc X</span><input type="range" min="-2500" max="10000" value="${state[k].dx}" data-k="${k}" data-p="dx"><span class="val" id="v-${k}-dx">${state[k].dx}</span></div>
-      <div class="row"><span class="lbl">Disc Y</span><input type="range" min="-2500" max="2500" value="${state[k].dy}" data-k="${k}" data-p="dy"><span class="val" id="v-${k}-dy">${state[k].dy}</span></div>`;
+    const sliders=(m.controls||[]).map(c=>{
+      const v=state[k][c.p], grp=c.group?`<div class="grp">${c.group}</div>`:"";
+      return grp+`<div class="row"><span class="lbl">${c.label}</span>`
+        +`<input type="range" min="${c.min}" max="${c.max}" step="${c.step||1}" value="${v}" data-k="${k}" data-p="${c.p}">`
+        +`<input type="number" class="num" step="${c.step||1}" value="${v}" data-k="${k}" data-p="${c.p}" id="n-${k}-${c.p}"></div>`;
+    }).join("");
     const badge=m.exact?`<span class="exact">EXACT · shapes locked</span>`:"";
     return `<div class="card"><div class="stage" id="stage-${k}"></div>
       <div class="ctl"><div class="name">${m.title}${badge}</div>${colorRows}${bgRow}${sliders}</div></div>`;
@@ -156,36 +188,19 @@ function buildCards(){
     b.parentElement.querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
     render(k);
   });
-  document.querySelectorAll("input[type=range]").forEach(s=>s.oninput=()=>{
-    const {k,p}=s.dataset; state[k][p]=+s.value; document.getElementById(`v-${k}-${p}`).textContent=s.value; render(k);
-  });
+  function setVal(k,p,v){ state[k][p]=v;
+    const s=document.querySelector(`input[type=range][data-k="${k}"][data-p="${p}"]`);
+    const n=document.getElementById(`n-${k}-${p}`);
+    if(s&&+s.value!==v) s.value=v; if(n&&+n.value!==v) n.value=v; render(k); }
+  document.querySelectorAll("input[type=range]").forEach(s=>s.oninput=()=>setVal(s.dataset.k,s.dataset.p,+s.value));
+  document.querySelectorAll("input.num").forEach(n=>n.oninput=()=>{ if(n.value!==""&&!isNaN(+n.value)) setVal(n.dataset.k,n.dataset.p,+n.value); });
   Object.keys(MARKS).forEach(render);
 }
 const LP_SNIPPET_EMBED="<g class=\"lp\" fill-opacity=\"1\"><g transform=\"translate(497.360556, 846.169887)\"><g><path d=\"M 36.640625 0 L 36.640625 -9.015625 L 81.734375 -31.5625 L 81.734375 -340.46875 L 36.640625 -363.015625 L 36.640625 -372.03125 L 183.203125 -372.03125 L 183.203125 -363.015625 L 132.46875 -340.46875 L 132.46875 -31 L 269.4375 -31 L 307.765625 -125.140625 L 316.796875 -125.140625 L 316.796875 0 Z M 36.640625 0 \"/></g></g></g><g class=\"lp\" fill-opacity=\"1\"><g transform=\"translate(683.663758, 1010.300653)\"><g><path d=\"M 36.640625 0 L 36.640625 -9.015625 L 81.734375 -31.5625 L 81.734375 -340.46875 L 36.640625 -363.015625 L 36.640625 -372.03125 L 183.203125 -372.03125 C 227.546875 -372.03125 263.148438 -363.953125 290.015625 -347.796875 C 316.890625 -331.640625 330.328125 -306.085938 330.328125 -271.140625 C 330.328125 -250.835938 323.28125 -232.609375 309.1875 -216.453125 C 295.09375 -200.296875 276.019531 -187.519531 251.96875 -178.125 C 227.914062 -168.726562 200.484375 -164.03125 169.671875 -164.03125 L 132.46875 -164.03125 L 132.46875 -31.5625 L 183.203125 -9.015625 L 183.203125 0 Z M 176.4375 -341.03125 L 132.46875 -341.03125 L 132.46875 -195.03125 L 180.375 -195.03125 C 210.0625 -195.03125 233.359375 -201.703125 250.265625 -215.046875 C 267.179688 -228.390625 275.640625 -245.582031 275.640625 -266.625 C 275.640625 -292.925781 267.085938 -311.898438 249.984375 -323.546875 C 232.890625 -335.203125 208.375 -341.03125 176.4375 -341.03125 Z M 176.4375 -341.03125 \"/></g></g></g>";
-async function boot(){
-  LP_SNIPPET=LP_SNIPPET_EMBED;
-  const tmp=document.createElement("div");
-  tmp.style.cssText="position:absolute;left:-9999px;width:400px;height:400px";
-  tmp.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1500">'+LP_SNIPPET+'</svg>';
-  document.body.appendChild(tmp);
-  const gs=[...tmp.querySelectorAll(".lp")];
-  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
-  gs.forEach(g=>{const b=g.getBBox(); x0=Math.min(x0,b.x);y0=Math.min(y0,b.y);x1=Math.max(x1,b.x+b.width);y1=Math.max(y1,b.y+b.height);});
-  document.body.removeChild(tmp);
-  const w=x1-x0,h=y1-y0;
-  MARKS.m1.def.dx=Math.round(x1+w*0.06);
-  MARKS.m1.def.dy=Math.round(y1-h*0.02);
-  MARKS.m1.def.dd=Math.round(h*0.26);
-  state.m1={...MARKS.m1.def};
-  buildCards();
-}
+function boot(){ LP_SNIPPET=LP_SNIPPET_EMBED; buildCards(); }
 window.addEventListener("load",boot);
 </script>
-<script>
-(function(){function postH(){try{parent.postMessage({lpHeight:document.body.scrollHeight},'*');}catch(e){}}
-window.addEventListener('load',function(){postH();setTimeout(postH,400);});
-window.addEventListener('resize',postH);
-new MutationObserver(postH).observe(document.body,{subtree:true,childList:true,attributes:true});
-})();
-</script>
+<script>(function(){function h(){try{parent.postMessage({lpHeight:document.body.scrollHeight},'*');}catch(e){}}
+window.addEventListener('load',function(){h();setTimeout(h,400);});window.addEventListener('resize',h);
+new MutationObserver(h).observe(document.body,{subtree:true,childList:true,attributes:true});})();</script>
 </body></html>
