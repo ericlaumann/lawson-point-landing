@@ -73,7 +73,12 @@ const VIDEOS=[
   {key:'2', id:'Option 2', file:'v2.mp4'},
   {key:'3', id:'Option 3', file:'v3.mp4'},
   {key:'4', id:'Option 4', file:'v4.mp4'},
-  {key:'5', id:'Current',  file:'../hero.mp4'},
+  {key:'5', id:'Option 5', file:'v5.mp4'},
+  {key:'6', id:'Option 6', file:'v6.mp4'},
+  {key:'7', id:'Option 7', file:'v7.mp4'},
+  {key:'8', id:'Option 8', file:'v8.mp4'},
+  {key:'9', id:'Option 9', file:'v9.mp4'},
+  {key:'c', id:'Current',  file:'../hero.mp4'},
 ];
 const TREATS=[
   {key:'natural', name:'Natural',      filter:'brightness(0.90)',                tint:null,                            scrim:'8,10,14'},
@@ -86,7 +91,7 @@ const TREATS=[
 const $=s=>document.querySelector(s);
 const vid=$('.ground'), tintEl=$('.tint'), scrimEl=$('.scrim');
 const params=new URLSearchParams(location.search);
-let vi=VIDEOS.findIndex(v=>v.key===(params.get('v')||localStorage.getItem('lp-pick-v')||'5')); if(vi<0)vi=4;
+let vi=VIDEOS.findIndex(v=>v.key===(params.get('v')||localStorage.getItem('lp-pick-v')||'c')); if(vi<0)vi=VIDEOS.length-1;
 let ti=TREATS.findIndex(t=>t.key===(params.get('t')||localStorage.getItem('lp-pick-t')||'navy'));  if(ti<0)ti=1;
 
 function scrimCss(rgb){return `radial-gradient(ellipse 60rem 30rem at 50% 47%, rgba(${rgb},0.45), rgba(${rgb},0.26) 62%, rgba(${rgb},0.15)),`
@@ -116,7 +121,8 @@ TREATS.forEach((t,i)=>{const b=document.createElement('button');b.className='btn
   b.onclick=()=>{ti=i;applyTreat();};$('#treats').appendChild(b);});
 
 addEventListener('keydown',e=>{
-  if(e.key>='1'&&e.key<=String(VIDEOS.length)){vi=+e.key-1;loadVideo();applyTreat();}
+  if(/^[1-9]$/.test(e.key)&&+e.key<=VIDEOS.length){vi=+e.key-1;loadVideo();applyTreat();}
+  else if(e.key.toLowerCase()==='c'){vi=VIDEOS.length-1;loadVideo();applyTreat();}
   else if(e.key==='ArrowRight'){ti=(ti+1)%TREATS.length;applyTreat();}
   else if(e.key==='ArrowLeft'){ti=(ti-1+TREATS.length)%TREATS.length;applyTreat();}
   else if(e.key.toLowerCase()==='h'){$('#panel').classList.toggle('hide');}
