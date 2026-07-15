@@ -16,7 +16,7 @@
   <style>
     /* On brand: the footage is tinted to Navy #2E3C4D via a colour blend, with
        cool paper text, a Cloud-muted subline, and a Clay Rose hairline. */
-    :root { --linen:#F2F3F3; --sand:#DEE3E2; --copper:#C4796B; --navy:46,60,77; --scrim:30,42,58; }
+    :root { --linen:#F2F3F3; --sand:#DEE3E2; --copper:#C4796B; --sage:#96B09D; --navy:46,60,77; --scrim:30,42,58; }
     * { margin:0; padding:0; box-sizing:border-box; }
     html, body { height:100%; }
     body {
@@ -33,14 +33,18 @@
     @media (prefers-reduced-motion: reduce) { .ground, .tint { display:none; } }
     /* Hero — unchanged, now its own full-viewport section */
     .hero { position:relative; min-height:100vh; display:flex; flex-direction:column;
-      align-items:center; justify-content:center; text-align:center; padding:2rem 1.5rem; }
-    main { animation:settle 1.4s ease-out both; }
+      align-items:center; justify-content:center; text-align:center; padding:calc(2rem + 12vh) 1.5rem 2rem; }
+    main { position:relative; animation:settle 1.4s ease-out both; }
+    /* copy scrim — soft haze behind the hero text so it reads over the bright waterline */
+    main::before { content:''; position:absolute; z-index:0; inset:-3.5rem -2.5rem; pointer-events:none;
+      background:radial-gradient(ellipse at center, rgba(18,24,33,0.52), rgba(18,24,33,0.26) 45%, transparent 72%); }
+    main > * { position:relative; z-index:1; }
     @keyframes settle { from { opacity:0; transform:translateY(6px);} to { opacity:1; transform:none;} }
     @media (prefers-reduced-motion: reduce) { main { animation:none; } }
-    .name { font-family:'Spectral',Georgia,serif; font-weight:500; font-size:clamp(1.6rem,5.2vw,3rem); letter-spacing:0.18em; text-indent:0.18em; text-transform:uppercase; line-height:1.2; text-shadow:0 1px 26px rgba(0,0,0,0.55); }
-    .sub { margin-top:0.9rem; font-size:clamp(0.62rem,1.6vw,0.82rem); font-weight:500; letter-spacing:0.52em; text-indent:0.52em; text-transform:uppercase; color:var(--sand); text-shadow:0 1px 16px rgba(0,0,0,0.6); }
-    .rule { width:3.5rem; height:2px; background:var(--copper); margin:2.75rem auto; box-shadow:0 0 14px rgba(196,121,107,0.55); }
-    .status { font-family:'Spectral',Georgia,serif; font-style:italic; font-size:clamp(1rem,2.4vw,1.2rem); color:var(--sand); text-shadow:0 1px 16px rgba(0,0,0,0.6); }
+    .name { font-family:'Spectral',Georgia,serif; font-weight:500; font-size:clamp(2rem,6.4vw,4.2rem); letter-spacing:0.18em; text-indent:0.18em; text-transform:uppercase; line-height:1.12; text-shadow:0 1px 26px rgba(0,0,0,0.55); }
+    .sub { margin-top:1.1rem; font-size:clamp(0.82rem,2.05vw,1.06rem); font-weight:500; letter-spacing:0.5em; text-indent:0.5em; text-transform:uppercase; color:var(--linen); text-shadow:0 1px 16px rgba(0,0,0,0.6); }
+    .rule { width:3.5rem; height:2px; background:var(--sage); margin:2.6rem auto 2.2rem; box-shadow:0 0 14px rgba(150,176,157,0.55); }
+    .status { font-family:'Spectral',Georgia,serif; font-style:italic; font-size:clamp(1.06rem,2.6vw,1.35rem); color:var(--linen); text-shadow:0 1px 16px rgba(0,0,0,0.6); }
     footer { position:absolute; bottom:1.75rem; left:0; right:0; font-size:0.7rem; letter-spacing:0.08em; color:rgba(242,243,243,0.6); text-align:center; }
     /* very subtle scroll cue — only meaningful to someone who knows to look */
     .cue { position:absolute; bottom:3.4rem; left:0; right:0; text-align:center;
