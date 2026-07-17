@@ -52,6 +52,18 @@
   <video class="ground" autoplay muted loop playsinline preload="auto" poster="poster.jpg" aria-hidden="true">
     <source src="hero.mp4" type="video/mp4">
   </video>
+  <script>
+    /* The poster is the frame at t=10s. Start playback there too, so the
+       poster→video handoff is seamless and the launch never shows the
+       cloud "pop" that appears when playback begins at t=0. */
+    (function () {
+      var v = document.querySelector('video.ground');
+      var START = 10;
+      function seek() { try { if (v.currentTime < START) v.currentTime = START; } catch (e) {} }
+      v.addEventListener('loadedmetadata', seek, { once: true });
+      v.addEventListener('loadeddata', seek, { once: true });
+    })();
+  </script>
   <div class="tint" role="presentation"></div>
   <div class="scrim" role="presentation"></div>
 
