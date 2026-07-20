@@ -9,9 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#2E3C4D; --sage:#96B09D; --mist:#DEE3E2; --linen:#F2F3F3; --white:#ffffff;
+    --navy:#2E3C4D; --sage:#8CA9C4; --mist:#DEE3E2; --linen:#F2F3F3; --white:#ffffff;
     --ink:#23262A; --muted:#6b7280; --line:#e2e6e5;
-    --accent:#C4796B; --on-accent:#ffffff;   /* LOCKED — Clay Rose */
+    --accent:#C07C70; --on-accent:#ffffff;   /* LOCKED — Clay Rose */
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--linen);color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
@@ -99,8 +99,8 @@
 <div class="wrap">
   <div class="switch" id="switch">
     <span class="lbl">Final system</span>
-    <span class="fixed">Navy · Sage neutrals · Soft-white paper + Cloud gray</span>
-    <span class="fixed"><span class="d"></span>Clay Rose accent · #C4796B</span>
+    <span class="fixed">Navy · Harbor neutrals · Soft-white paper + Cloud gray</span>
+    <span class="fixed"><span class="d"></span>Clay Rose accent · #C07C70</span>
     <span class="curhex" id="curhex">Locked · 2026-07-09</span>
   </div>
   <div class="pal" id="pal"></div>
@@ -181,7 +181,7 @@ function lockup(letters,point){const i=++uid;
       <rect width="200" height="200" fill="${point}" mask="url(#pt${i})"/></svg></svg>`;}
 
 /* LOCKED system (2026-07-09): Clay Rose accent · Soft-white paper + Cloud gray. */
-const NAVY='#2E3C4D',SAGE='#96B09D',WHITE='#FFFFFF';
+const NAVY='#2E3C4D',SAGE='#8CA9C4',WHITE='#FFFFFF';
 const R=document.documentElement;
 const getA=()=>getComputedStyle(R).getPropertyValue('--accent').trim();
 const getM=()=>getComputedStyle(R).getPropertyValue('--mist').trim();
@@ -211,7 +211,7 @@ function logos(){
     [WHITE,NAVY,SAGE,'Navy LP · sage point'],
     [L,NAVY,M,'Navy LP · cloud point'],
     [NAVY,L,A,'Reversed · clay point'],
-    [NAVY,SAGE,A,'Sage LP · clay point'],
+    [NAVY,SAGE,A,'Harbor LP · clay point'],
     [NAVY,L,SAGE,'Reversed · sage point'],
   ];
   document.getElementById('lg-two').innerHTML=two.map(([bg,lp,pt,c])=>lt(bg,lockup(lp,pt),c,0)).join('');
@@ -222,7 +222,7 @@ function logos(){
   ];
   document.getElementById('lg-mono').innerHTML=mono.map(([bg,lp,pt,c])=>lt(bg,lockup(lp,pt),c,0)).join('');
   const pts=[
-    ['',A,'Clay',1],['',NAVY,'Navy',1],['',SAGE,'Sage',1],['',M,'Cloud',1],
+    ['',A,'Clay',1],['',NAVY,'Navy',1],['',SAGE,'Harbor',1],['',M,'Cloud',1],
     [NAVY,L,'Soft white · on navy',0],[NAVY,WHITE,'White · on navy',0],
   ];
   document.getElementById('lg-points').innerHTML=pts.map(([bg,c,cap,ck])=>lt(bg,disc(c,150),cap,ck)).join('');
@@ -230,11 +230,11 @@ function logos(){
 }
 document.getElementById('pal').innerHTML=
   `<div class="s" style="background:#2E3C4D;color:#F7F2E8">#2E3C4D · navy</div>`+
-  `<div class="s" style="background:#96B09D;color:#23262A">#96B09D · sage</div>`+
+  `<div class="s" style="background:#8CA9C4;color:#23262A">#8CA9C4 · sage</div>`+
   `<div class="s" id="pal-gray" style="color:#23262A"></div>`+
   `<div class="s" id="pal-paper" style="color:#8a8377"></div>`+
   `<div class="s" style="background:#FFFFFF;color:#8a8377">#FFFFFF · white</div>`+
-  `<div class="s" style="background:#C4796B;color:#fff">#C4796B · accent</div>`;
+  `<div class="s" style="background:#C07C70;color:#fff">#C07C70 · accent</div>`;
 function syncPal(){
   const g=getM(),p=getL();
   const gel=document.getElementById('pal-gray'); gel.style.background=g; gel.textContent=g.toUpperCase()+' · gray';

@@ -1,0 +1,24 @@
+/* GENERATED from brand/tokens.json by scripts/build-brand.mjs — do not edit. */
+:root {
+  --lp-navy: #2E3C4D;
+  --lp-navy-rgb: 46, 60, 77;
+  --lp-harbor: #8CA9C4;
+  --lp-harbor-rgb: 140, 169, 196;
+  --lp-cloud: #DEE3E2;
+  --lp-cloud-rgb: 222, 227, 226;
+  --lp-softwhite: #F2F3F3;
+  --lp-softwhite-rgb: 242, 243, 242;
+  --lp-white: #FFFFFF;
+  --lp-white-rgb: 255, 255, 255;
+  --lp-clay: #C07C70;
+  --lp-clay-rgb: 192, 124, 112;
+  --lp-serif: 'Spectral', Georgia, 'Times New Roman', serif;
+  --lp-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --lp-ground: var(--lp-navy);
+  --lp-ink: var(--lp-navy);
+  --lp-secondary: var(--lp-harbor);
+  --lp-muted: var(--lp-cloud);
+  --lp-paper: var(--lp-softwhite);
+  --lp-surface: var(--lp-white);
+  --lp-accent: var(--lp-clay);
+}

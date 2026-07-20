@@ -13,10 +13,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Brand tokens — synced from lawson-point-design/brand/tokens.json (SSOT). -->
+  <link rel="stylesheet" href="tokens.css">
   <style>
     /* On brand: the footage is tinted to Navy #2E3C4D via a colour blend, with
        cool paper text, a Cloud-muted subline, and a Clay Rose hairline. */
-    :root { --linen:#F2F3F3; --sand:#DEE3E2; --copper:#C4796B; --sage:#96B09D; --navy:46,60,77; --scrim:30,42,58; }
+    :root { --linen:var(--lp-softwhite); --sand:var(--lp-cloud); --copper:var(--lp-clay); --sage:var(--lp-harbor); --navy:var(--lp-navy-rgb); --scrim:30,42,58; }
     * { margin:0; padding:0; box-sizing:border-box; }
     html, body { height:100%; }
     body {
@@ -43,7 +45,7 @@
     @media (prefers-reduced-motion: reduce) { main { animation:none; } }
     .name { font-family:'Spectral',Georgia,serif; font-weight:500; font-size:clamp(2rem,6.4vw,4.2rem); letter-spacing:0.18em; text-indent:0.18em; text-transform:uppercase; line-height:1.12; text-shadow:0 1px 26px rgba(0,0,0,0.55); }
     .sub { margin-top:1.1rem; font-size:clamp(0.82rem,2.05vw,1.06rem); font-weight:500; letter-spacing:0.5em; text-indent:0.5em; text-transform:uppercase; color:var(--linen); text-shadow:0 1px 16px rgba(0,0,0,0.6); }
-    .rule { width:3.5rem; height:2px; background:var(--copper); margin:2.6rem auto 2.2rem; box-shadow:0 0 14px rgba(196,121,107,0.55); }
+    .rule { width:3.5rem; height:2px; background:var(--copper); margin:2.6rem auto 2.2rem; box-shadow:0 0 14px rgba(var(--lp-clay-rgb),0.55); }
     .status { font-family:'Spectral',Georgia,serif; font-style:italic; font-size:clamp(1.06rem,2.6vw,1.35rem); color:var(--linen); text-shadow:0 1px 16px rgba(0,0,0,0.6); }
     footer { position:absolute; bottom:1.75rem; left:0; right:0; font-size:0.7rem; letter-spacing:0.08em; color:rgba(242,243,243,0.6); text-align:center; }
   </style>
