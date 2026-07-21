@@ -21,4 +21,14 @@
   --lp-paper: var(--lp-softwhite);
   --lp-surface: var(--lp-white);
   --lp-accent: var(--lp-clay);
+  /* derived tints — computed from the six core colours (recipes in tokens.json) */
+  --lp-ink-soft: #46576B;
+  --lp-ink-muted: #626D7A;
+  --lp-navy-raised: #39495B;
+  --lp-navy-deep: #26313F;
+  --lp-cloud-soft: #E8EBEB;
+  --lp-paper-raised: #F7F8F8;
+  --lp-clay-soft: #F6EBEA;
+  --lp-clay-border: #E7D8D5;
+  --lp-harbor-wash: #EDEFF1;
 }
