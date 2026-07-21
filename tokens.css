@@ -4,6 +4,8 @@
   --lp-navy-rgb: 46, 60, 77;
   --lp-harbor: #8CA9C4;
   --lp-harbor-rgb: 140, 169, 196;
+  --lp-sound: #2E629E;
+  --lp-sound-rgb: 46, 98, 158;
   --lp-cloud: #DEE3E2;
   --lp-cloud-rgb: 222, 227, 226;
   --lp-softwhite: #F2F3F3;
@@ -17,6 +19,7 @@
   --lp-ground: var(--lp-navy);
   --lp-ink: var(--lp-navy);
   --lp-secondary: var(--lp-harbor);
+  --lp-link: var(--lp-sound);
   --lp-muted: var(--lp-cloud);
   --lp-paper: var(--lp-softwhite);
   --lp-surface: var(--lp-white);
