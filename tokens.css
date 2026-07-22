@@ -23,7 +23,6 @@
   --lp-link: var(--lp-fathom);
   --lp-accent: var(--lp-fathom);
   --lp-muted: var(--lp-shallow);
-  --lp-paper: var(--lp-paper);
   --lp-surface: var(--lp-white);
   /* derived tints — computed from the six core colours (recipes in tokens.json) */
   --lp-ink-soft: #42556B;
